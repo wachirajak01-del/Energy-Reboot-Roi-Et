@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brain Reset Journey – ร้อยเอ็ด</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f8f6f2;
+    --bg2: #ffffff;
+    --text: #1a1a1a;
+    --text2: #6b6b6b;
+    --accent: #c4956a;
+    --accent2: #7b9e87;
+    --accent3: #4a6fa5;
+    --glass: rgba(255,255,255,0.55);
+    --glass-border: rgba(255,255,255,0.8);
+    --shadow: 0 8px 40px rgba(0,0,0,0.08);
+    --shadow-hover: 0 20px 60px rgba(0,0,0,0.14);
+    --radius: 20px;
+    --nav-h: 72px;
+    --transition: all 0.45s cubic-bezier(0.23, 1, 0.32, 1);
+  }
+  [data-theme="dark"] {
+    --bg: #0f0f0f;
+    --bg2: #181818;
+    --text: #f0ece6;
+    --text2: #9a9590;
+    --glass: rgba(30,28,26,0.7);
+    --glass-border: rgba(255,255,255,0.08);
+    --shadow: 0 8px 40px rgba(0,0,0,0.4);
+    --shadow-hover: 0 20px 60px rgba(0,0,0,0.55);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; font-size: 16px; }
+  body {
+    font-family: 'Sarabun', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    transition: background 0.4s, color 0.4s;
+    overflow-x: hidden;
+  }
+
+  /* ── NAVBAR ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 999;
+    height: var(--nav-h);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 5%;
+    background: rgba(248,246,242,0.72);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-bottom: 1px solid rgba(196,149,106,0.12);
+    transition: var(--transition);
+  }
+  [data-theme="dark"] nav { background: rgba(15,15,15,0.78); }
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    color: var(--accent);
+    letter-spacing: 0.04em;
+  }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a {
+    font-size: 0.85rem; font-weight: 500; letter-spacing: 0.06em;
+    color: var(--text2); text-decoration: none;
+    transition: color 0.25s;
+  }
+  .nav-links a:hover { color: var(--accent); }
+  .nav-right { display: flex; align-items: center; gap: 1rem; }
+  .dark-toggle {
+    width: 44px; height: 26px; border-radius: 13px;
+    background: var(--accent); border: none; cursor: pointer;
+    position: relative; transition: background 0.3s;
+  }
+  .dark-toggle::after {
+    content: '';
+    position: absolute; top: 3px; left: 3px;
+    width: 20px; height: 20px; border-radius: 50%;
+    background: white;
+    transition: transform 0.3s;
+  }
+  [data-theme="dark"] .dark-toggle::after { transform: translateX(18px); }
+  .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
+  .hamburger span { display: block; width: 22px; height: 2px; background: var(--text); border-radius: 2px; transition: var(--transition); }
+
+  /* ── HERO ── */
+  #hero {
+    height: 100vh; min-height: 600px;
+    position: relative; display: flex; align-items: center; justify-content: center;
+    text-align: center; overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background-image: url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1800&q=80');
+    background-size: cover; background-position: center;
+    transform: scale(1.08);
+    transition: transform 0.1s linear;
+  }
+  .hero-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(160deg,
+      rgba(10,10,10,0.55) 0%,
+      rgba(30,20,10,0.35) 50%,
+      rgba(196,149,106,0.22) 100%);
+    backdrop-filter: blur(1px);
+  }
+  .hero-content { position: relative; z-index: 2; padding: 0 20px; max-width: 800px; }
+  .hero-eyebrow {
+    display: inline-block;
+    font-size: 0.75rem; font-weight: 600; letter-spacing: 0.22em;
+    color: rgba(255,255,255,0.7);
+    text-transform: uppercase;
+    margin-bottom: 1.4rem;
+    padding: 6px 18px;
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 40px;
+    backdrop-filter: blur(10px);
+    background: rgba(255,255,255,0.06);
+  }
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.6rem, 7vw, 5rem);
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.12;
+    margin-bottom: 1.2rem;
+    text-shadow: 0 2px 30px rgba(0,0,0,0.3);
+  }
+  .hero-title em { font-style: italic; color: #e8c99a; }
+  .hero-sub {
+    font-size: clamp(1rem, 2.2vw, 1.2rem);
+    color: rgba(255,255,255,0.75);
+    font-weight: 300;
+    line-height: 1.7;
+    max-width: 520px; margin: 0 auto 2.5rem;
+  }
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 16px 38px;
+    background: linear-gradient(135deg, #c4956a 0%, #a8784d 100%);
+    color: white; border: none; border-radius: 60px;
+    font-family: 'Sarabun', sans-serif;
+    font-size: 0.95rem; font-weight: 600; letter-spacing: 0.05em;
+    cursor: pointer; text-decoration: none;
+    box-shadow: 0 8px 30px rgba(196,149,106,0.4);
+    transition: var(--transition);
+  }
+  .btn-primary:hover {
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: 0 14px 40px rgba(196,149,106,0.55);
+  }
+  .btn-primary svg { width: 18px; height: 18px; }
+  .hero-scroll-hint {
+    position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    color: rgba(255,255,255,0.5); font-size: 0.72rem; letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+  .scroll-line {
+    width: 1px; height: 50px;
+    background: linear-gradient(to bottom, rgba(255,255,255,0.5), transparent);
+    animation: scrollPulse 2s ease-in-out infinite;
+  }
+  @keyframes scrollPulse { 0%,100%{opacity:0.4;transform:scaleY(1)} 50%{opacity:1;transform:scaleY(1.1)} }
+
+  /* ── SECTION BASE ── */
+  section { padding: 120px 5%; }
+  .section-label {
+    display: inline-block;
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.22em;
+    text-transform: uppercase; color: var(--accent);
+    margin-bottom: 1rem;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 4.5vw, 3rem);
+    font-weight: 700; line-height: 1.18;
+    color: var(--text);
+    margin-bottom: 0.8rem;
+  }
+  .section-sub {
+    font-size: 1.05rem; color: var(--text2);
+    line-height: 1.75; max-width: 520px;
+    font-weight: 300;
+  }
+  .section-head { margin-bottom: 3.5rem; }
+
+  /* ── FADE UP ANIMATION ── */
+  .fade-up {
+    opacity: 0; transform: translateY(40px);
+    transition: opacity 0.7s cubic-bezier(0.23,1,0.32,1),
+                transform 0.7s cubic-bezier(0.23,1,0.32,1);
+  }
+  .fade-up.visible { opacity: 1; transform: translateY(0); }
+  .delay-1 { transition-delay: 0.1s; }
+  .delay-2 { transition-delay: 0.2s; }
+  .delay-3 { transition-delay: 0.3s; }
+  .delay-4 { transition-delay: 0.4s; }
+
+  /* ── HOTELS ── */
+  #hotels { background: var(--bg); }
+  .hotels-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.8rem;
+  }
+  .hotel-card {
+    background: var(--bg2);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+    cursor: pointer;
+    border: 1px solid var(--glass-border);
+  }
+  .hotel-card:hover {
+    transform: translateY(-10px) scale(1.015);
+    box-shadow: var(--shadow-hover);
+  }
+  .hotel-img-wrap {
+    position: relative; height: 240px; overflow: hidden;
+  }
+  .hotel-img-wrap img {
+    width: 100%; height: 100%; object-fit: cover;
+    transition: transform 0.7s cubic-bezier(0.23,1,0.32,1);
+    loading: lazy;
+  }
+  .hotel-card:hover .hotel-img-wrap img { transform: scale(1.08); }
+  .hotel-badge {
+    position: absolute; top: 14px; right: 14px;
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(10px);
+    padding: 5px 12px; border-radius: 30px;
+    font-size: 0.72rem; font-weight: 700; color: #1a1a1a;
+    letter-spacing: 0.06em;
+  }
+  .hotel-body { padding: 1.6rem; }
+  .hotel-rating {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 0.85rem; color: var(--text2); margin-bottom: 0.6rem;
+  }
+  .star { color: #f5a623; font-size: 0.9rem; }
+  .hotel-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem; font-weight: 700;
+    color: var(--text); margin-bottom: 0.5rem;
+  }
+  .hotel-desc {
+    font-size: 0.88rem; color: var(--text2);
+    line-height: 1.7; margin-bottom: 1rem;
+  }
+  .tag-wrap { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tag {
+    padding: 4px 12px; border-radius: 20px;
+    font-size: 0.72rem; font-weight: 600; letter-spacing: 0.04em;
+  }
+  .tag-green { background: #eaf4ec; color: #3a7d50; }
+  .tag-blue { background: #e8f0fc; color: #2d5aad; }
+  .tag-warm { background: #fdf0e6; color: #b0632a; }
+  .tag-purple { background: #f0eafd; color: #6840b5; }
+  .hotel-reset-tip {
+    margin-top: 1rem;
+    padding: 10px 14px;
+    background: linear-gradient(135deg, rgba(196,149,106,0.08), rgba(123,158,135,0.08));
+    border-left: 3px solid var(--accent);
+    border-radius: 0 10px 10px 0;
+    font-size: 0.8rem; color: var(--text2); line-height: 1.6;
+  }
+
+  /* ── RESTAURANTS ── */
+  #restaurants { background: linear-gradient(180deg, var(--bg) 0%, var(--bg2) 100%); }
+  .rest-scroll-wrap {
+    overflow-x: auto;
+    padding-bottom: 1.5rem;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    cursor: grab;
+  }
+  .rest-scroll-wrap:active { cursor: grabbing; }
+  .rest-scroll-wrap::-webkit-scrollbar { height: 4px; }
+  .rest-scroll-wrap::-webkit-scrollbar-track { background: transparent; }
+  .rest-scroll-wrap::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
+  .rest-row {
+    display: flex; gap: 1.6rem;
+    width: max-content; padding: 10px 0;
+  }
+  .rest-card {
+    scroll-snap-align: start;
+    width: 300px; flex-shrink: 0;
+    background: var(--bg2);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--glass-border);
+    transition: var(--transition);
+  }
+  .rest-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-hover); }
+  .rest-img { width: 100%; height: 200px; object-fit: cover; loading: lazy; }
+  .rest-body { padding: 1.4rem; }
+  .rest-name {
+    font-size: 1.05rem; font-weight: 700; color: var(--text); margin-bottom: 0.3rem;
+  }
+  .rest-menu { font-size: 0.82rem; color: var(--accent); font-weight: 600; margin-bottom: 0.5rem; }
+  .rest-atmo { font-size: 0.83rem; color: var(--text2); line-height: 1.65; }
+  .rest-chip {
+    display: inline-block; margin-top: 0.8rem;
+    padding: 3px 10px; border-radius: 20px;
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.05em;
+  }
+
+  /* ── TIMELINE ── */
+  #timeline { background: var(--bg2); }
+  .timeline-wrap { position: relative; max-width: 700px; margin: 0 auto; }
+  .timeline-line {
+    position: absolute; left: 28px; top: 0; bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--accent), var(--accent2), var(--accent3));
+    border-radius: 2px;
+  }
+  .tl-day { margin-bottom: 3rem; }
+  .tl-day-label {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem; font-weight: 700; color: var(--text);
+    padding: 8px 0 8px 60px;
+    margin-bottom: 1.2rem;
+  }
+  .tl-day-label span { color: var(--accent); }
+  .tl-item {
+    display: flex; gap: 1.4rem;
+    align-items: flex-start;
+    margin-bottom: 1.2rem;
+    padding-left: 0;
+  }
+  .tl-icon-wrap {
+    flex-shrink: 0; width: 56px; height: 56px;
+    border-radius: 16px;
+    background: var(--bg);
+    border: 2px solid var(--glass-border);
+    box-shadow: var(--shadow);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem;
+    position: relative; z-index: 2;
+  }
+  .tl-content {
+    flex: 1; background: var(--bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px; padding: 1rem 1.3rem;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+  }
+  .tl-content:hover { box-shadow: var(--shadow-hover); transform: translateX(4px); }
+  .tl-time {
+    font-size: 0.75rem; font-weight: 700; color: var(--accent);
+    letter-spacing: 0.1em; margin-bottom: 0.25rem;
+  }
+  .tl-act { font-size: 0.95rem; font-weight: 600; color: var(--text); margin-bottom: 0.25rem; }
+  .tl-note { font-size: 0.8rem; color: var(--text2); line-height: 1.65; }
+
+  /* ── INSIGHT ── */
+  #insight {
+    background: var(--bg);
+    position: relative; overflow: hidden;
+  }
+  .insight-glow {
+    position: absolute; width: 600px; height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(196,149,106,0.18) 0%, transparent 70%);
+    top: -200px; right: -200px;
+    pointer-events: none;
+  }
+  .insight-glow2 {
+    position: absolute; width: 400px; height: 400px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(123,158,135,0.15) 0%, transparent 70%);
+    bottom: -150px; left: -100px;
+    pointer-events: none;
+  }
+  .insight-panel {
+    position: relative; z-index: 1;
+    background: var(--glass);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    border: 1px solid var(--glass-border);
+    border-radius: 28px;
+    padding: 3.5rem 3rem;
+    max-width: 860px; margin: 0 auto;
+    box-shadow: var(--shadow);
+  }
+  .insight-concept {
+    display: inline-block;
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--accent2);
+    margin-bottom: 1.2rem;
+    padding: 5px 14px; border-radius: 20px;
+    background: rgba(123,158,135,0.12);
+  }
+  .insight-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+    font-weight: 700; line-height: 1.25;
+    color: var(--text); margin-bottom: 1.2rem;
+  }
+  .insight-desc {
+    font-size: 1rem; color: var(--text2); line-height: 1.85;
+    margin-bottom: 2rem;
+  }
+  .insight-cards {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem;
+  }
+  .i-card {
+    padding: 1.4rem;
+    background: rgba(255,255,255,0.45);
+    border: 1px solid rgba(255,255,255,0.7);
+    border-radius: 16px;
+    backdrop-filter: blur(10px);
+  }
+  [data-theme="dark"] .i-card { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.08); }
+  .i-card-icon { font-size: 1.6rem; margin-bottom: 0.6rem; }
+  .i-card-title { font-size: 0.9rem; font-weight: 700; color: var(--text); margin-bottom: 0.4rem; }
+  .i-card-text { font-size: 0.82rem; color: var(--text2); line-height: 1.7; }
+  .reset-path {
+    margin-top: 2rem; padding: 1.4rem;
+    background: linear-gradient(135deg, rgba(196,149,106,0.12), rgba(74,111,165,0.1));
+    border-radius: 16px;
+    font-size: 0.9rem; line-height: 1.9; color: var(--text2);
+  }
+  .reset-path strong { color: var(--text); }
+
+  /* ── HOWWOD ZIPLINE ── */
+  #howwod { background: var(--bg2); padding: 80px 5% 120px; }
+  .howwod-hero {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 4rem;
+    align-items: center; max-width: 1200px; margin: 0 auto;
+  }
+  .howwod-img-wrap {
+    position: relative; border-radius: 28px; overflow: hidden;
+    height: 580px; box-shadow: var(--shadow-hover);
+  }
+  .howwod-img-wrap img {
+    width: 100%; height: 100%; object-fit: cover;
+    transition: transform 0.8s cubic-bezier(0.23,1,0.32,1);
+  }
+  .howwod-img-wrap:hover img { transform: scale(1.05); }
+  .howwod-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.1) 55%, transparent 100%);
+    display: flex; flex-direction: column; justify-content: flex-end;
+    padding: 2.5rem;
+  }
+  .howwod-badge-big {
+    display: inline-block; width: fit-content;
+    background: linear-gradient(135deg, #c4956a, #a8784d);
+    color: white; padding: 6px 16px; border-radius: 30px;
+    font-size: 0.78rem; font-weight: 700; letter-spacing: 0.08em;
+    margin-bottom: 0.8rem;
+  }
+  .howwod-big-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.2rem, 4vw, 3.2rem);
+    font-weight: 700; color: white; line-height: 1.1;
+    margin-bottom: 0.5rem;
+  }
+  .howwod-big-title span { color: #e8c99a; }
+  .howwod-big-sub { font-size: 0.88rem; color: rgba(255,255,255,0.75); line-height: 1.6; }
+  .howwod-stats {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 1rem; margin-bottom: 2rem;
+    padding: 1.4rem;
+    background: linear-gradient(135deg, rgba(196,149,106,0.1), rgba(74,111,165,0.08));
+    border-radius: 18px; border: 1px solid var(--glass-border);
+  }
+  .hw-stat { text-align: center; }
+  .hw-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.7rem; font-weight: 700; color: var(--accent);
+    line-height: 1;
+  }
+  .hw-num span { font-size: 1rem; }
+  .hw-label { font-size: 0.72rem; color: var(--text2); margin-top: 4px; }
+  .howwod-tips { display: flex; flex-direction: column; gap: 1rem; }
+  .hw-tip {
+    display: flex; gap: 1rem; align-items: flex-start;
+    padding: 1rem 1.2rem;
+    background: var(--bg);
+    border-radius: 14px; border: 1px solid var(--glass-border);
+    font-size: 0.85rem; line-height: 1.65; color: var(--text2);
+    transition: var(--transition);
+  }
+  .hw-tip:hover { border-color: var(--accent); box-shadow: var(--shadow); }
+  .hw-tip strong { color: var(--text); display: block; margin-bottom: 2px; }
+  .hw-tip-icon { font-size: 1.3rem; flex-shrink: 0; margin-top: 1px; }
+  .howwod-tower-art {
+    position: absolute; inset: 0;
+    background: linear-gradient(160deg, #0a1628 0%, #1a3a6b 60%, #2a4a3a 100%);
+  }
+    .howwod-hero { grid-template-columns: 1fr; gap: 2.5rem; }
+    .howwod-img-wrap { height: 380px; }
+    .howwod-stats { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  /* ── GALLERY ── */
+  #gallery { background: var(--bg2); }
+  .gallery-grid {
+    columns: 3 280px; gap: 1.2rem;
+  }
+  .gallery-item {
+    break-inside: avoid; margin-bottom: 1.2rem;
+    border-radius: 16px; overflow: hidden;
+    box-shadow: var(--shadow);
+    position: relative; cursor: zoom-in;
+  }
+  .gallery-item img {
+    width: 100%; display: block;
+    transition: transform 0.6s cubic-bezier(0.23,1,0.32,1);
+    loading: lazy;
+  }
+  .gallery-item::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.35) 0%, transparent 50%);
+    opacity: 0; transition: opacity 0.4s;
+  }
+  .gallery-item:hover img { transform: scale(1.06); }
+  .gallery-item:hover::after { opacity: 1; }
+
+  /* ── LIGHTBOX ── */
+  .lightbox {
+    display: none; position: fixed; inset: 0; z-index: 9999;
+    background: rgba(0,0,0,0.92); backdrop-filter: blur(10px);
+    align-items: center; justify-content: center;
+  }
+  .lightbox.open { display: flex; }
+  .lightbox img { max-width: 90vw; max-height: 90vh; border-radius: 12px; object-fit: contain; }
+  .lightbox-close {
+    position: absolute; top: 20px; right: 24px;
+    font-size: 2rem; color: white; cursor: pointer;
+    width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;
+    border-radius: 50%; background: rgba(255,255,255,0.1);
+    transition: background 0.2s;
+  }
+  .lightbox-close:hover { background: rgba(255,255,255,0.2); }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--bg);
+    padding: 3rem 5%;
+    border-top: 1px solid rgba(196,149,106,0.15);
+    text-align: center;
+  }
+  .footer-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem; color: var(--accent);
+    margin-bottom: 0.5rem;
+  }
+  .footer-tagline { font-size: 0.85rem; color: var(--text2); margin-bottom: 1.5rem; }
+  .footer-links { display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+  .footer-links a {
+    font-size: 0.82rem; font-weight: 500; color: var(--text2);
+    text-decoration: none; letter-spacing: 0.06em;
+    transition: color 0.2s;
+  }
+  .footer-links a:hover { color: var(--accent); }
+  .footer-divider {
+    height: 1px; width: 120px; margin: 0 auto 1.5rem;
+    background: linear-gradient(to right, transparent, var(--accent), transparent);
+  }
+  .footer-social { display: flex; justify-content: center; gap: 1rem; margin-bottom: 1.5rem; }
+  .social-btn {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: var(--bg2); border: 1px solid var(--glass-border);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text2); font-size: 1rem; text-decoration: none;
+    transition: var(--transition);
+  }
+  .social-btn:hover { background: var(--accent); color: white; border-color: var(--accent); transform: translateY(-3px); }
+  .footer-copy { font-size: 0.75rem; color: var(--text2); opacity: 0.6; }
+
+  /* ── STATS BAR ── */
+  .stats-bar {
+    background: linear-gradient(135deg, var(--accent) 0%, #a8784d 100%);
+    padding: 2.5rem 5%;
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem;
+    text-align: center;
+  }
+  .stat-item { color: white; }
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem; font-weight: 700;
+    display: block; margin-bottom: 0.3rem;
+  }
+  .stat-label { font-size: 0.8rem; opacity: 0.8; font-weight: 400; letter-spacing: 0.06em; }
+
+  /* ── MOBILE NAV ── */
+  .nav-mobile { display: none; }
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+    .nav-mobile {
+      position: fixed; top: var(--nav-h); left: 0; right: 0;
+      background: var(--bg2); backdrop-filter: blur(20px);
+      padding: 1.5rem 5%;
+      display: none; flex-direction: column; gap: 1.2rem;
+      z-index: 998; border-bottom: 1px solid var(--glass-border);
+    }
+    .nav-mobile.open { display: flex; }
+    .nav-mobile a {
+      font-size: 1rem; color: var(--text); text-decoration: none; font-weight: 500;
+    }
+    .insight-cards { grid-template-columns: 1fr; }
+    .stats-bar { grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    section { padding: 80px 5%; }
+  }
+  @media (max-width: 480px) {
+    .stats-bar { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav id="navbar">
+  <div class="nav-logo">🌿 Brain Reset</div>
+  <ul class="nav-links">
+    <li><a href="#hotels">ที่พัก</a></li>
+    <li><a href="#restaurants">ร้านอาหาร</a></li>
+    <li><a href="#timeline">แผนการเดินทาง</a></li>
+    <li><a href="#howwod">หอโหวด</a></li>
+    <li><a href="#insight">Brain Reset</a></li>
+    <li><a href="#gallery">แกลเลอรี่</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="dark-toggle" id="darkToggle" aria-label="เปลี่ยน dark mode"></button>
+    <div class="hamburger" id="hamburger">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+<nav class="nav-mobile" id="navMobile">
+  <a href="#hotels" onclick="closeMobileNav()">ที่พัก</a>
+  <a href="#restaurants" onclick="closeMobileNav()">ร้านอาหาร</a>
+  <a href="#timeline" onclick="closeMobileNav()">แผนการเดินทาง</a>
+  <a href="#howwod" onclick="closeMobileNav()">หอโหวด</a>
+  <a href="#insight" onclick="closeMobileNav()">Brain Reset</a>
+  <a href="#gallery" onclick="closeMobileNav()">แกลเลอรี่</a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg" id="heroBg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">28 เม.ย. – 1 พ.ค. 2569 · ร้อยเอ็ด</div>
+    <h1 class="hero-title">
+      Brain Reset<br><em>Journey</em>
+    </h1>
+    <p class="hero-sub">
+      ปล่อยให้ธรรมชาติล้างความเหนื่อยจากหน้าจอ<br>
+      เติมพลังกลับสู่จิตใจที่ใสสะอาด ก่อนกลับมาสร้างสิ่งยิ่งใหญ่
+    </p>
+    <a href="#hotels" class="btn-primary">
+      สำรวจแผนการเดินทาง
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+  </div>
+  <div class="hero-scroll-hint">
+    <div class="scroll-line"></div>
+    เลื่อนลง
+  </div>
+</section>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="stat-item fade-up">
+    <span class="stat-num">3</span>
+    <span class="stat-label">วันรีเซ็ต</span>
+  </div>
+  <div class="stat-item fade-up delay-1">
+    <span class="stat-num">3</span>
+    <span class="stat-label">ที่พักคัดสรร</span>
+  </div>
+  <div class="stat-item fade-up delay-2">
+    <span class="stat-num">4+</span>
+    <span class="stat-label">ร้านอาหารแนะนำ</span>
+  </div>
+  <div class="stat-item fade-up delay-3">
+    <span class="stat-num">0</span>
+    <span class="stat-label">Zoom calls</span>
+  </div>
+</div>
+
+<!-- HOTELS -->
+<section id="hotels">
+  <div class="section-head fade-up">
+    <span class="section-label">ที่พักแนะนำ</span>
+    <h2 class="section-title">พักผ่อนอย่าง<br>มีความหมาย</h2>
+    <p class="section-sub">ทั้ง 3 แห่งถูกคัดเลือกมาเพื่อการรีเซ็ตสมองโดยเฉพาะ ไม่ใช่แค่ที่นอน</p>
+  </div>
+  <div class="hotels-grid">
+    <div class="hotel-card fade-up">
+      <div class="hotel-img-wrap">
+        <img src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=600&q=80" alt="Mae On Village Resort">
+        <div class="hotel-badge">⭐ แนะนำอันดับ 1</div>
+      </div>
+      <div class="hotel-body">
+        <div class="hotel-rating">
+          <span class="star">★</span> 4.5 · 172 รีวิว · ~15 นาทีจากเมือง
+        </div>
+        <div class="hotel-name">Mae On Village Resort</div>
+        <div class="hotel-desc">บังกะโลท่ามกลางทุ่งนา บรรยากาศอีสานแท้ บริการอาหารไทย/อีสาน เงียบสงบ พื้นที่กว้าง เดินได้ไม่มีสิ่งรบกวน</div>
+        <div class="tag-wrap">
+          <span class="tag tag-green">🌾 กลางทุ่งนา</span>
+          <span class="tag tag-blue">🔇 เงียบสงบ</span>
+          <span class="tag tag-warm">🍳 อาหารเช้าพร้อม</span>
+        </div>
+        <div class="hotel-reset-tip">💡 ท้องฟ้ากว้าง ดาวชัด เสียงนก — กระตุ้น Default Mode Network ให้สมองได้ประมวลผลสิ่งที่เรียนรู้มา</div>
+      </div>
+    </div>
+    <div class="hotel-card fade-up delay-1">
+      <div class="hotel-img-wrap">
+        <img src="https://images.unsplash.com/photo-1464146072230-91cabc968266?w=600&q=80" alt="Forest Hotel">
+        <div class="hotel-badge">🌿 ตัวเลือกในเมือง</div>
+      </div>
+      <div class="hotel-body">
+        <div class="hotel-rating">
+          <span class="star">★</span> 4.1 · 95 รีวิว · 5 นาทีจากเมือง
+        </div>
+        <div class="hotel-name">Forest Hotel</div>
+        <div class="hotel-desc">โรงแรมล้อมรอบด้วยต้นไม้เก่าแก่ บรรยากาศธรรมชาติในเมือง Wi-Fi ดี เจ้าของ friendly เหมาะสำหรับใช้เป็น base</div>
+        <div class="tag-wrap">
+          <span class="tag tag-green">🌳 ร่มรื่น</span>
+          <span class="tag tag-blue">📶 Wi-Fi ดี</span>
+          <span class="tag tag-warm">🚶 เดินทางสะดวก</span>
+        </div>
+        <div class="hotel-reset-tip">💡 ต้นไม้ใหญ่รอบ micro-nature environment ลดระดับ cortisol — ต้นไม้ใกล้เมือง เดินชมต้นไม้ตอนเช้าช่วย clear mind</div>
+      </div>
+    </div>
+    <div class="hotel-card fade-up delay-2">
+      <div class="hotel-img-wrap">
+        <img src="https://images.unsplash.com/photo-1590490360182-c33d57733427?w=600&q=80" alt="Baan Rim Bueng Resort">
+        <div class="hotel-badge">🐾 Pet Friendly</div>
+      </div>
+      <div class="hotel-body">
+        <div class="hotel-rating">
+          <span class="star">★</span> 4.7 · 106 รีวิว · 10 นาทีจากเมือง
+        </div>
+        <div class="hotel-name">บ้านนามีดังค์ รีสอร์ท</div>
+        <div class="hotel-desc">ระเบียงมองเห็นทะเลสาบเล็ก บรรยากาศเงียบ ส่วนตัวสูง บ้านพักแบบ standalone ไม่แชร์พื้นที่ เหมาะสำหรับคนต้องการพื้นที่ส่วนตัว</div>
+        <div class="tag-wrap">
+          <span class="tag tag-blue">🦢 ริมทะเลสาบ</span>
+          <span class="tag tag-purple">🏡 Standalone</span>
+          <span class="tag tag-warm">🐕 Pet Friendly</span>
+        </div>
+        <div class="hotel-reset-tip">💡 เสียงน้ำ + วิวรรมชาติตอนพระอาทิตย์ตก ช่วยลด mental load ด้วย Attention Restoration Theory</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RESTAURANTS -->
+<section id="restaurants">
+  <div class="section-head fade-up">
+    <span class="section-label">ร้านอาหาร</span>
+    <h2 class="section-title">กินจริง รสอีสานแท้</h2>
+    <p class="section-sub">ร้านคนท้องถิ่นกินจริง ราคาดี รสชาติที่ให้ endorphin ตามธรรมชาติ</p>
+  </div>
+  <div class="rest-scroll-wrap" id="restScroll">
+    <div class="rest-row">
+      <div class="rest-card fade-up">
+        <img class="rest-img" src="https://images.unsplash.com/photo-1569050467447-ce54b3bbc37d?w=400&q=80" alt="ตำกระเทย">
+        <div class="rest-body">
+          <div class="rest-name">ตำกระเทย (Tumkratoei)</div>
+          <div class="rest-menu">Signature: ส้มตำเมนูพิเศษ, ปลาย่าง, ต้มฮา, ไก่ทอด</div>
+          <div class="rest-atmo">บริการไว เมนูภาษาอังกฤษ มีห้องแอร์ · 10:30–21:00</div>
+          <span class="rest-chip tag-warm">อันดับ 1 ต้องไป</span>
+          <div class="hotel-reset-tip" style="margin-top:0.8rem">💡 กินรสอีสาน = endorphin spike ธรรมชาติ ให้รู้สึก grounded</div>
+        </div>
+      </div>
+      <div class="rest-card fade-up delay-1">
+        <img class="rest-img" src="https://images.unsplash.com/photo-1562565652-a0d8f0c59eb4?w=400&q=80" alt="บ้านสามพี่น้อง">
+        <div class="rest-body">
+          <div class="rest-name">ร้านต้มไก่บ้านสามพี่น้อง</div>
+          <div class="rest-menu">Signature: ต้มไก่บ้านสูตรโบราณ, ส้มตำเผ็ดไฟลน</div>
+          <div class="rest-atmo">ริมทะเลสาบ มองน้ำขณะกิน · 8:30–18:00</div>
+          <span class="rest-chip tag-blue">มื้อกลางวัน</span>
+          <div class="hotel-reset-tip" style="margin-top:0.8rem">💡 นั่งริมทะเลสาบ มองน้ำขณะกิน = ลด analytical thinking ได้ดี</div>
+        </div>
+      </div>
+      <div class="rest-card fade-up delay-2">
+        <img class="rest-img" src="https://images.unsplash.com/photo-1445116572660-236099ec97a0?w=400&q=80" alt="Skipper Garden Café">
+        <div class="rest-body">
+          <div class="rest-name">Skipper Garden Café</div>
+          <div class="rest-menu">Signature: กาแฟในสวน, นั่งแกว่งริมต้นไม้</div>
+          <div class="rest-atmo">บรรยากาศ "ป่าจิ๋ว" เสียงนกและน้ำ · 8:30–17:30</div>
+          <span class="rest-chip tag-green">คาเฟ่ธรรมชาติ</span>
+          <div class="hotel-reset-tip" style="margin-top:0.8rem">💡 16:00-17:00 หลังเลิกอบรม นั่งแกว่ง ไม่มีโต๊ะประชุม สมองเข้าสู่ passive mode</div>
+        </div>
+      </div>
+      <div class="rest-card fade-up delay-3">
+        <img class="rest-img" src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400&q=80" alt="Huai Nuea Food Garden">
+        <div class="rest-body">
+          <div class="rest-name">Huai Nuea Food Garden</div>
+          <div class="rest-menu">Signature: หมูแดง, บาร์บีคิว, เบียร์สด</div>
+          <div class="rest-atmo">สวนอาหารขนาดใหญ่ ดนตรีสด ลานนั่งในสวน · 11:00–23:00</div>
+          <span class="rest-chip tag-purple">มื้อเย็น + ดนตรีสด</span>
+          <div class="hotel-reset-tip" style="margin-top:0.8rem">💡 ดนตรีสด shift สมองจาก beta wave → alpha wave เหมาะมากตอนเย็นหลังอบรม</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TIMELINE -->
+<section id="timeline">
+  <div class="section-head fade-up">
+    <span class="section-label">แผนช่วงเย็น & วันเที่ยวเต็ม</span>
+    <h2 class="section-title">ทุกเย็นมีความหมาย</h2>
+    <p class="section-sub">ออกแบบมาเพื่อให้สมองได้ผ่อนคลายหลังการเรียนรู้หนัก</p>
+  </div>
+  <div class="timeline-wrap">
+    <div class="timeline-line"></div>
+
+    <div class="tl-day fade-up">
+      <div class="tl-day-label"><span>วันที่ 1</span> — 28 เม.ย. (เย็นแรก รีเซ็ต)</div>
+      <div class="tl-item">
+        <div class="tl-icon-wrap">☕</div>
+        <div class="tl-content">
+          <div class="tl-time">17:00</div>
+          <div class="tl-act">Skipper Garden Café</div>
+          <div class="tl-note">กาแฟ + แกว่ง + เสียงธรรมชาติ 45 นาที — ล้างความเครียดจากห้องอบรม ไม่เปิด laptop</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-icon-wrap">🚶</div>
+        <div class="tl-content">
+          <div class="tl-time">18:00</div>
+          <div class="tl-act">เดินรอบบึงพลาญชัย</div>
+          <div class="tl-note">เดินเบาๆ กลางเมือง 1.6 กม. — ไฟยามเย็นสวยมาก คนออกกำลังกาย ได้ social energy</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-icon-wrap">🍽️</div>
+        <div class="tl-content">
+          <div class="tl-time">19:00</div>
+          <div class="tl-act">ตำกระเทย</div>
+          <div class="tl-note">ส้มตำ + ปลาย่าง มื้อแรกรสอีสานแท้ — อิ่มแล้วกลับพักได้เลย</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-day fade-up delay-1">
+      <div class="tl-day-label"><span>วันที่ 2</span> — 29 เม.ย. (เดิมพัง)</div>
+      <div class="tl-item">
+        <div class="tl-icon-wrap">🏛️</div>
+        <div class="tl-content">
+          <div class="tl-time">17:00</div>
+          <div class="tl-act">เจดีย์หามงคลบัว</div>
+          <div class="tl-note">วัดเงียบ กว้าง สวย ห่างเมืองแค่ 5 นาที — ให้อาหารปลา นั่งสมาธิ ดีมากสำหรับคนสายวิสวะ/AI</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-icon-wrap">🗼</div>
+        <div class="tl-content">
+          <div class="tl-time">18:30</div>
+          <div class="tl-act">หอโหวด — ขึ้นชม + โหนซิปไลน์</div>
+          <div class="tl-note">ขึ้นลิฟต์ถึงชั้น 34 (101 ม.) วิว 360° เห็นบึงพลาญชัยและทั้งเมือง — แล้วโหนซิปไลน์ 350 เมตร ลงสู่เกาะกลางบึง ราคา 101 บาท แห่งแรกในไทย ค่าเข้าชมหอ 50 บาท เพิ่ม</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-icon-wrap">🎵</div>
+        <div class="tl-content">
+          <div class="tl-time">19:30</div>
+          <div class="tl-act">Huai Nuea Food Garden</div>
+          <div class="tl-note">สวนอาหาร ดนตรีสด บาร์บีคิว — ผ่อนคลายแบบมีชีวิตชีวา</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-day fade-up delay-2">
+      <div class="tl-day-label"><span>วันที่ 3</span> — 30 เม.ย. (ก่อนวันเที่ยวเต็ม)</div>
+      <div class="tl-item">
+        <div class="tl-icon-wrap">🎨</div>
+        <div class="tl-content">
+          <div class="tl-time">17:30</div>
+          <div class="tl-act">Street Art Roi-Et</div>
+          <div class="tl-note">เดินชมจิตรกรรมฝาผนังกลางเมือง ~20 ภาพ ใช้เวลา 1 ชั่วโมง บรรยากาศสร้างสรรค์ ดี inspiration มาก</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-icon-wrap">🍜</div>
+        <div class="tl-content">
+          <div class="tl-time">19:00</div>
+          <div class="tl-act">ครัวเวียดนามร้อยเอ็ด</div>
+          <div class="tl-note">เมนูเวียดนามในอีสาน — เน้มนวง ข้าวปุ๊ก แหนมเมือง เจ้าของน่ารัก ราคาถูกมาก แปลกใหม่ดี</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-day fade-up delay-3">
+      <div class="tl-day-label"><span>วันที่ 4</span> — 1 พ.ค. (วันเที่ยวเต็ม)</div>
+      <div class="tl-item">
+        <div class="tl-icon-wrap">🌅</div>
+        <div class="tl-content">
+          <div class="tl-time">06:30</div>
+          <div class="tl-act">เดินเข้าบึงพลาญชัย</div>
+          <div class="tl-note">ออกไปตอนเช้าหน่อม คนออกกำลังกาย อากาศเย็น — ดีที่สุดสำหรับ mental reset เข้าวันสุดท้าย</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-icon-wrap">☕</div>
+        <div class="tl-content">
+          <div class="tl-time">08:00</div>
+          <div class="tl-act">Nexterday Specialty Coffee</div>
+          <div class="tl-note">specialty coffee ที่ดีที่สุดในร้อยเอ็ด ⭐ 4.8 — ครัวซอง, cheesecake, espresso คุณภาพระดับกรุงเทพ</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-icon-wrap">🐟</div>
+        <div class="tl-content">
+          <div class="tl-time">09:30</div>
+          <div class="tl-act">เจดีย์หามงคลบัว (ตอนเช้า)</div>
+          <div class="tl-note">เงียบกว่าตอนเย็น ไม่มีนักท่องเที่ยว นั่งสมาธิ ให้อาหารปลา ถ่ายรูปสวยมาก ห่าง 10 นาที</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-icon-wrap">🍲</div>
+        <div class="tl-content">
+          <div class="tl-time">11:30</div>
+          <div class="tl-act">ต้มไก่บ้านสามพี่น้อง (มื้อกลางวัน)</div>
+          <div class="tl-note">ริมทะเลสาบ มองน้ำขณะกิน — มื้อกลางวันในบรรยากาศดีที่สุดใน trip นี้</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-icon-wrap">🌾</div>
+        <div class="tl-content">
+          <div class="tl-time">13:30</div>
+          <div class="tl-act">ปลายนา คาเฟ่ (กลางทุ่ง)</div>
+          <div class="tl-note">คาเฟ่กลางนาข้าว ระเบียงชั้น 2 มองทุ่ง — เดินทาง ~20 นาทีจากเมือง เหมาะมากสำหรับ "ฉันอยู่อีสานจริงๆ"</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-icon-wrap">🛍️</div>
+        <div class="tl-content">
+          <div class="tl-time">16:00</div>
+          <div class="tl-act">ตลาดเย็น + ของฝาก</div>
+          <div class="tl-note">ตลาดดอนเย็นรอบบึงพลาญชัย — ข้าวเกรียบปากหม้อ ผ้าไหมร้อยเอ็ด ของกิน local ราคาถูก</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INSIGHT -->
+<section id="insight">
+  <div class="insight-glow"></div>
+  <div class="insight-glow2"></div>
+  <div class="insight-panel fade-up">
+    <span class="insight-concept">🧠 Brain Reset Concept</span>
+    <h2 class="insight-title">ทำไม "ร้อยเอ็ด" ถึงรีเซ็ตสมองได้จริง</h2>
+    <p class="insight-desc">
+      ทริปนี้ออกแบบตาม <strong>Attention Restoration Theory</strong> — สมองที่ใช้ directed attention (อบรม AI/Engineering หนักๆ)
+      จะฟื้นตัวได้เร็วที่สุดด้วย <strong>ธรรมชาติ + เสียงน้ำ + ท้องฟ้าเปิด</strong>
+      ไม่ใช่การนอนดู Netflix ในห้อง
+    </p>
+    <div class="insight-cards">
+      <div class="i-card">
+        <div class="i-card-icon">🌿</div>
+        <div class="i-card-title">Attention Restoration Theory</div>
+        <div class="i-card-text">ธรรมชาติ เสียงน้ำ ท้องฟ้ากว้าง ช่วยให้ directed attention ฟื้นตัว — กลับมาโฟกัสได้ดีขึ้นหลังพัก</div>
+      </div>
+      <div class="i-card">
+        <div class="i-card-icon">🧘</div>
+        <div class="i-card-title">Default Mode Network</div>
+        <div class="i-card-text">เวลาสมองเข้า passive mode (เดิน, นั่งมองน้ำ) ระบบ DMN จะ consolidate สิ่งที่เรียนรู้มา — insight เกิดตอนไม่ได้คิด</div>
+      </div>
+      <div class="i-card">
+        <div class="i-card-icon">📉</div>
+        <div class="i-card-title">ลด Cortisol ด้วย Micro-nature</div>
+        <div class="i-card-text">ต้นไม้ใหญ่, เสียงนก, แสงแดดเช้า — ลด cortisol ได้ภายใน 20 นาที โดยไม่ต้องทำอะไรพิเศษ</div>
+      </div>
+      <div class="i-card">
+        <div class="i-card-icon">🎵</div>
+        <div class="i-card-title">Alpha Wave ผ่านดนตรีสด</div>
+        <div class="i-card-text">ดนตรีสด shift สมองจาก beta → alpha wave — ผ่อนคลายลึกขึ้นกว่าฟัง playlist เพราะมี unpredictability ของการเล่นสด</div>
+      </div>
+    </div>
+    <div class="reset-path">
+      <strong>เส้นทาง Brain Reset:</strong><br>
+      วัน 1–3 (เย็นหลังอบรม): ธรรมชาติ → วัด → tower → ศิลปะ<br>
+      วันสุดท้าย: เช้าเดิน → คาแฟดี → วัดเงียบ → กินริมทะเลสาบ → คาเฟ่นา<br><br>
+      ผลลัพธ์: สมองได้ทำงานแบบ <strong>passive</strong> ทุกวัน ไม่ให้ information overload ต่อเนื่อง — insight จากการอบรม AI/Engineering จะ consolidate ได้ดีกว่าถ้าได้พักสมองแบบนี้
+    </div>
+  </div>
+</section>
+
+<!-- HOWWOD ZIPLINE HIGHLIGHT -->
+<section id="howwod" style="background: var(--bg2); padding-top: 0;">
+  <div class="howwod-hero fade-up">
+    <div class="howwod-img-wrap">
+      <!-- SVG illustration of Howwod tower since no free photo available -->
+      <div class="howwod-tower-art" id="howwodArt">
+        <svg viewBox="0 0 480 600" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;position:absolute;inset:0;">
+          <!-- Sky gradient -->
+          <defs>
+            <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#0a1628"/>
+              <stop offset="50%" stop-color="#1a3a6b"/>
+              <stop offset="100%" stop-color="#c4956a" stop-opacity="0.6"/>
+            </linearGradient>
+            <linearGradient id="towerGrad" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#8a6a3a"/>
+              <stop offset="50%" stop-color="#c4956a"/>
+              <stop offset="100%" stop-color="#6a4a20"/>
+            </linearGradient>
+            <linearGradient id="waterGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#1a4a8a" stop-opacity="0.8"/>
+              <stop offset="100%" stop-color="#0a2a5a" stop-opacity="0.9"/>
+            </linearGradient>
+            <filter id="glow">
+              <feGaussianBlur stdDeviation="3" result="blur"/>
+              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+          <!-- Sky -->
+          <rect width="480" height="600" fill="url(#skyGrad)"/>
+          <!-- Stars -->
+          <circle cx="50" cy="40" r="1.2" fill="white" opacity="0.8"/>
+          <circle cx="120" cy="20" r="1" fill="white" opacity="0.6"/>
+          <circle cx="200" cy="55" r="1.5" fill="white" opacity="0.9"/>
+          <circle cx="320" cy="30" r="1" fill="white" opacity="0.7"/>
+          <circle cx="400" cy="15" r="1.3" fill="white" opacity="0.8"/>
+          <circle cx="430" cy="60" r="1" fill="white" opacity="0.5"/>
+          <circle cx="80" cy="80" r="0.8" fill="white" opacity="0.6"/>
+          <circle cx="350" cy="75" r="1.1" fill="white" opacity="0.7"/>
+          <!-- Sunset glow -->
+          <ellipse cx="240" cy="430" rx="280" ry="80" fill="#c4956a" opacity="0.15"/>
+          <!-- Water / Bueng Phlanchai -->
+          <ellipse cx="240" cy="570" rx="260" ry="55" fill="url(#waterGrad)"/>
+          <ellipse cx="240" cy="570" rx="260" ry="55" fill="none" stroke="#4a8abf" stroke-width="1" opacity="0.4"/>
+          <!-- Water shimmer -->
+          <line x1="130" y1="565" x2="180" y2="567" stroke="white" stroke-width="1.5" opacity="0.3"/>
+          <line x1="260" y1="558" x2="320" y2="561" stroke="white" stroke-width="1" opacity="0.25"/>
+          <line x1="200" y1="575" x2="250" y2="576" stroke="white" stroke-width="1" opacity="0.2"/>
+          <!-- City silhouette -->
+          <rect x="0" y="440" width="80" height="60" fill="#0d1f3c" opacity="0.8"/>
+          <rect x="10" y="420" width="20" height="80" fill="#0d1f3c" opacity="0.8"/>
+          <rect x="35" y="430" width="25" height="70" fill="#0d1f3c" opacity="0.8"/>
+          <rect x="370" y="445" width="110" height="55" fill="#0d1f3c" opacity="0.8"/>
+          <rect x="380" y="425" width="18" height="75" fill="#0d1f3c" opacity="0.8"/>
+          <rect x="405" y="435" width="22" height="65" fill="#0d1f3c" opacity="0.8"/>
+          <rect x="440" y="440" width="15" height="60" fill="#0d1f3c" opacity="0.8"/>
+          <!-- City lights -->
+          <circle cx="20" cy="428" r="1.5" fill="#ffcc66" opacity="0.9"/>
+          <circle cx="42" cy="438" r="1.2" fill="#ffcc66" opacity="0.7"/>
+          <circle cx="385" cy="432" r="1.5" fill="#ffcc66" opacity="0.9"/>
+          <circle cx="410" cy="442" r="1.2" fill="#ffcc66" opacity="0.7"/>
+          <!-- HOWWOD TOWER - main structure -->
+          <!-- Base -->
+          <rect x="205" y="440" width="70" height="30" rx="4" fill="url(#towerGrad)"/>
+          <!-- Main shaft -->
+          <rect x="220" y="150" width="40" height="295" rx="2" fill="url(#towerGrad)"/>
+          <!-- Tower body - wider cylindrical sections (Howwod shape) -->
+          <ellipse cx="240" cy="150" rx="55" ry="18" fill="#c4956a" opacity="0.9"/>
+          <ellipse cx="240" cy="200" rx="48" ry="15" fill="#b8864a" opacity="0.85"/>
+          <ellipse cx="240" cy="250" rx="42" ry="13" fill="#c4956a" opacity="0.88"/>
+          <ellipse cx="240" cy="300" rx="38" ry="12" fill="#b8864a" opacity="0.85"/>
+          <ellipse cx="240" cy="350" rx="34" ry="11" fill="#c4956a" opacity="0.9"/>
+          <!-- Vertical ribs (Howwod instrument shape) -->
+          <line x1="215" y1="155" x2="195" y2="440" stroke="#a07840" stroke-width="3" opacity="0.7"/>
+          <line x1="225" y1="152" x2="210" y2="440" stroke="#a07840" stroke-width="2.5" opacity="0.7"/>
+          <line x1="240" y1="150" x2="240" y2="440" stroke="#a07840" stroke-width="2" opacity="0.5"/>
+          <line x1="255" y1="152" x2="270" y2="440" stroke="#a07840" stroke-width="2.5" opacity="0.7"/>
+          <line x1="265" y1="155" x2="285" y2="440" stroke="#a07840" stroke-width="3" opacity="0.7"/>
+          <!-- Observation deck floors -->
+          <rect x="185" y="310" width="110" height="12" rx="3" fill="#d4a57a"/>
+          <rect x="190" y="295" width="100" height="18" rx="3" fill="#c4956a"/>
+          <rect x="188" y="340" width="104" height="10" rx="3" fill="#b8864a" opacity="0.8"/>
+          <!-- Glass floor level -->
+          <rect x="192" y="322" width="96" height="8" rx="2" fill="#88ccff" opacity="0.4"/>
+          <!-- Top spire -->
+          <polygon points="240,60 230,150 250,150" fill="#c4956a"/>
+          <circle cx="240" cy="58" r="6" fill="#ffcc66" filter="url(#glow)"/>
+          <!-- Top light glow -->
+          <circle cx="240" cy="58" r="14" fill="#ffcc66" opacity="0.2"/>
+          <!-- Zipline cable -->
+          <line x1="240" y1="300" x2="450" y2="545" stroke="#ffffff" stroke-width="2" stroke-dasharray="8,4" opacity="0.7"/>
+          <!-- Zipline person silhouette -->
+          <g transform="translate(320,400)" opacity="0.9">
+            <circle cx="0" cy="-14" r="6" fill="white"/>
+            <line x1="0" y1="-8" x2="0" y2="5" stroke="white" stroke-width="3"/>
+            <line x1="-8" y1="-2" x2="8" y2="-2" stroke="white" stroke-width="3"/>
+            <line x1="0" y1="5" x2="-6" y2="16" stroke="white" stroke-width="2.5"/>
+            <line x1="0" y1="5" x2="6" y2="16" stroke="white" stroke-width="2.5"/>
+            <!-- harness hook -->
+            <line x1="0" y1="-8" x2="0" y2="-20" stroke="white" stroke-width="2"/>
+            <circle cx="0" cy="-21" r="3" fill="none" stroke="white" stroke-width="2"/>
+          </g>
+          <!-- Speed lines for zipline -->
+          <line x1="290" y1="382" x2="305" y2="376" stroke="white" stroke-width="1" opacity="0.4"/>
+          <line x1="293" y1="390" x2="308" y2="384" stroke="white" stroke-width="1" opacity="0.3"/>
+          <!-- Landing island in lake -->
+          <ellipse cx="440" cy="548" rx="28" ry="10" fill="#3a6a3a" opacity="0.8"/>
+          <circle cx="440" cy="545" r="5" fill="#4a8a4a" opacity="0.9"/>
+          <!-- Height label -->
+          <line x1="172" y1="155" x2="172" y2="440" stroke="white" stroke-width="1" stroke-dasharray="4,3" opacity="0.4"/>
+          <text x="162" y="300" font-size="10" fill="white" opacity="0.6" text-anchor="middle" transform="rotate(-90,162,300)">101 ม.</text>
+          <!-- Zipline distance label -->
+          <text x="370" y="430" font-size="9" fill="white" opacity="0.55" text-anchor="middle">350 ม.</text>
+        </svg>
+      </div>
+      <div class="howwod-overlay">
+        <div class="howwod-badge-big">🎯 ไฮไลต์สุดพิเศษ</div>
+        <h2 class="howwod-big-title">หอโหวด ๑๐๑<br><span>ร้อยเอ็ด</span></h2>
+        <p class="howwod-big-sub">101 เมตรเหนือพื้นดิน · วิว 360° · ซิปไลน์ 350 เมตร สู่เกาะกลางบึงพลาญชัย</p>
+      </div>
+    </div>
+    <div class="howwod-info">
+      <span class="section-label">🗼 หอโหวด ๑๐๑ — Roi Et Tower</span>
+      <h2 class="section-title" style="margin-bottom:1rem">ขึ้นสูง 101 เมตร<br>โหนซิปไลน์ 350 เมตร</h2>
+      <p class="section-sub" style="margin-bottom:1.8rem">
+        หอโหวด ๑๐๑ ออกแบบตามรูปร่างเครื่องดนตรีพื้นบ้านอีสาน "โหวด" สัญลักษณ์ของร้อยเอ็ด
+        สูง 101 เมตร เท่ากับชื่อจังหวัด — แล้วโหนซิปไลน์ลงสู่เกาะกลางบึงพลาญชัย
+        แห่งแรกและแห่งเดียวในไทยที่มีซิปไลน์จากหอชมเมือง
+      </p>
+      <div class="howwod-stats">
+        <div class="hw-stat">
+          <div class="hw-num">101<span>ม.</span></div>
+          <div class="hw-label">ความสูงหอ</div>
+        </div>
+        <div class="hw-stat">
+          <div class="hw-num">350<span>ม.</span></div>
+          <div class="hw-label">ระยะซิปไลน์</div>
+        </div>
+        <div class="hw-stat">
+          <div class="hw-num">360°</div>
+          <div class="hw-label">วิวรอบเมือง</div>
+        </div>
+        <div class="hw-stat">
+          <div class="hw-num">101<span>฿</span></div>
+          <div class="hw-label">ค่าซิปไลน์</div>
+        </div>
+      </div>
+      <div class="howwod-tips">
+        <div class="hw-tip">
+          <div class="hw-tip-icon">🕔</div>
+          <div>
+            <strong>เวลาแนะนำ</strong><br>
+            17:00–19:00 — พระอาทิตย์ตกสาดแสงทอง วิวเมืองร้อยเอ็ดสวยที่สุด ก่อนปิดบัตร 18:00 น.
+          </div>
+        </div>
+        <div class="hw-tip">
+          <div class="hw-tip-icon">🪂</div>
+          <div>
+            <strong>ซิปไลน์ — แห่งแรกในไทย</strong><br>
+            โหนจากชั้น 34 (101 ม.) ลงสู่เกาะกลางบึงพลาญชัย ระยะ 350 เมตร ราคา 101 บาท
+            ถ่ายภาพเพิ่ม 101 บาท รวม 202 บาท
+          </div>
+        </div>
+        <div class="hw-tip">
+          <div class="hw-tip-icon">🏛️</div>
+          <div>
+            <strong>ไฮไลต์ภายในหอ</strong><br>
+            ชั้น 1–3: นิทรรศการ "ร้อยเรื่องเมืองโหวด" + ของที่ระลึก OTOP ·
+            ชั้น 28–30: ร้านอาหาร ·
+            ชั้น 34: Skywalk พื้นกระจกใส
+          </div>
+        </div>
+        <div class="hw-tip">
+          <div class="hw-tip-icon">🧠</div>
+          <div>
+            <strong>Brain Reset Effect</strong><br>
+            ความสูง 101 ม. + วิว 360° = perspective shift ทันที —
+            สมองออกจาก tunnel vision และ cortisol ลดลงเมื่อเห็น horizon กว้าง
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:1.5rem;padding:1rem 1.2rem;background:linear-gradient(135deg,rgba(196,149,106,0.12),rgba(74,111,165,0.1));border-radius:14px;font-size:0.82rem;color:var(--text2);line-height:1.8;">
+        📍 <strong style="color:var(--text)">ที่ตั้ง:</strong> สวนสมเด็จพระศรีนครินทร์ร้อยเอ็ด หน้าศาลากลางจังหวัด ติดบึงพลาญชัย ·
+        เปิดทุกวัน 09:00–19:00 · ค่าเข้าชมหอ 50 บาท · แต่งกายทะมัดทะแมง สวมรองเท้ากีฬา
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section id="gallery">
+  <div class="section-head fade-up">
+    <span class="section-label">แกลเลอรี่</span>
+    <h2 class="section-title">ภาพบรรยากาศ<br>ร้อยเอ็ด</h2>
+    <p class="section-sub">ทุ่งนา วัด บึง หอโหวด — บรรยากาศอีสานแท้ที่รอให้คุณสัมผัส</p>
+  </div>
+  <div class="gallery-grid fade-up">
+    <div class="gallery-item" data-src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Roi_Et_Tower.jpg/800px-Roi_Et_Tower.jpg">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Roi_Et_Tower.jpg/800px-Roi_Et_Tower.jpg"
+           onerror="this.src='https://images.unsplash.com/photo-1533130061792-64b345e4a833?w=500&q=80'"
+           alt="หอโหวด ร้อยเอ็ด" loading="lazy">
+    </div>
+    <div class="gallery-item" data-src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Bueng_Phlan_Chai.jpg/800px-Bueng_Phlan_Chai.jpg">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Bueng_Phlan_Chai.jpg/800px-Bueng_Phlan_Chai.jpg"
+           onerror="this.src='https://images.unsplash.com/photo-1501854140801-50d01698950b?w=500&q=80'"
+           alt="บึงพลาญชัย" loading="lazy">
+    </div>
+    <div class="gallery-item" data-src="https://images.unsplash.com/photo-1504274066651-8d31a536b11a?w=800&q=80">
+      <img src="https://images.unsplash.com/photo-1504274066651-8d31a536b11a?w=500&q=80" alt="ทุ่งนาอีสาน" loading="lazy">
+    </div>
+    <div class="gallery-item" data-src="https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=800&q=80">
+      <img src="https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=500&q=80" alt="วัดอีสาน" loading="lazy">
+    </div>
+    <div class="gallery-item" data-src="https://images.unsplash.com/photo-1569050467447-ce54b3bbc37d?w=800&q=80">
+      <img src="https://images.unsplash.com/photo-1569050467447-ce54b3bbc37d?w=500&q=80" alt="ส้มตำอีสาน" loading="lazy">
+    </div>
+    <div class="gallery-item" data-src="https://images.unsplash.com/photo-1533130061792-64b345e4a833?w=800&q=80">
+      <img src="https://images.unsplash.com/photo-1533130061792-64b345e4a833?w=500&q=80" alt="ซิปไลน์" loading="lazy">
+    </div>
+    <div class="gallery-item" data-src="https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=800&q=80">
+      <img src="https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=500&q=80" alt="พระอาทิตย์ตกอีสาน" loading="lazy">
+    </div>
+    <div class="gallery-item" data-src="https://images.unsplash.com/photo-1445116572660-236099ec97a0?w=800&q=80">
+      <img src="https://images.unsplash.com/photo-1445116572660-236099ec97a0?w=500&q=80" alt="คาเฟ่สวน" loading="lazy">
+    </div>
+    <div class="gallery-item" data-src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80">
+      <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=500&q=80" alt="ทะเลสาบ" loading="lazy">
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">🌿 Brain Reset Journey</div>
+  <div class="footer-tagline">ร้อยเอ็ด · 28 เม.ย. – 1 พ.ค. 2569 · โรงแรม เดอะ ไฮ เพลส</div>
+  <div class="footer-links">
+    <a href="#hotels">ที่พัก</a>
+    <a href="#restaurants">ร้านอาหาร</a>
+    <a href="#timeline">ตารางเวลา</a>
+    <a href="#howwod">หอโหวด</a>
+    <a href="#insight">Brain Reset</a>
+    <a href="#gallery">แกลเลอรี่</a>
+  </div>
+  <div class="footer-divider"></div>
+  <div class="footer-social">
+    <a class="social-btn" href="#" aria-label="Facebook">📘</a>
+    <a class="social-btn" href="#" aria-label="Instagram">📸</a>
+    <a class="social-btn" href="#" aria-label="Line">💚</a>
+  </div>
+  <div class="footer-copy">ระยะทางทุกที่: ไม่เกิน 20 นาทีจากโรงแรม · รถยนต์ธรรมดาไปได้ครับ ✨</div>
+</footer>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox">
+  <div class="lightbox-close" id="lightboxClose">✕</div>
+  <img id="lightboxImg" src="" alt="">
+</div>
+
+<script>
+  // DARK MODE
+  const darkBtn = document.getElementById('darkToggle');
+  const html = document.documentElement;
+  const saved = localStorage.getItem('theme') || 'light';
+  html.setAttribute('data-theme', saved);
+
+  darkBtn.addEventListener('click', () => {
+    const current = html.getAttribute('data-theme');
+    const next = current === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+  });
+
+  // MOBILE NAV
+  const hamburger = document.getElementById('hamburger');
+  const navMobile = document.getElementById('navMobile');
+  hamburger.addEventListener('click', () => navMobile.classList.toggle('open'));
+  function closeMobileNav() { navMobile.classList.remove('open'); }
+
+  // HERO PARALLAX
+  window.addEventListener('scroll', () => {
+    const bg = document.getElementById('heroBg');
+    if (bg) bg.style.transform = `scale(1.08) translateY(${window.scrollY * 0.25}px)`;
+  }, { passive: true });
+
+  // SCROLL ANIMATIONS
+  const fadeEls = document.querySelectorAll('.fade-up');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  fadeEls.forEach(el => observer.observe(el));
+
+  // GALLERY LIGHTBOX
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightboxImg');
+  document.querySelectorAll('.gallery-item').forEach(item => {
+    item.addEventListener('click', () => {
+      lightboxImg.src = item.dataset.src;
+      lightbox.classList.add('open');
+    });
+  });
+  document.getElementById('lightboxClose').addEventListener('click', () => lightbox.classList.remove('open'));
+  lightbox.addEventListener('click', (e) => { if (e.target === lightbox) lightbox.classList.remove('open'); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') lightbox.classList.remove('open'); });
+
+  // RESTAURANT HORIZONTAL DRAG SCROLL
+  const restScroll = document.getElementById('restScroll');
+  let isDown = false, startX, scrollLeft;
+  restScroll.addEventListener('mousedown', (e) => {
+    isDown = true; startX = e.pageX - restScroll.offsetLeft; scrollLeft = restScroll.scrollLeft;
+  });
+  restScroll.addEventListener('mouseleave', () => isDown = false);
+  restScroll.addEventListener('mouseup', () => isDown = false);
+  restScroll.addEventListener('mousemove', (e) => {
+    if (!isDown) return; e.preventDefault();
+    const x = e.pageX - restScroll.offsetLeft;
+    restScroll.scrollLeft = scrollLeft - (x - startX) * 1.5;
+  });
+
+  // SMOOTH NAVBAR SHADOW ON SCROLL
+  window.addEventListener('scroll', () => {
+    const nav = document.getElementById('navbar');
+    nav.style.boxShadow = window.scrollY > 60 ? '0 4px 30px rgba(0,0,0,0.08)' : 'none';
+  }, { passive: true });
+</script>
+</body>
+</html>
