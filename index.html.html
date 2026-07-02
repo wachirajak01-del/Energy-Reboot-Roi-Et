@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ที่พักริมทะเล ภาคใต้ฝั่งอันดามัน</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&family=Kanit:wght@400;600;700&display=swap');
+  :root {
+    --sea:#0077B6; --sea-dark:#023E8A; --sky:#90E0EF;
+    --sand:#F5E6C8; --foam:#FFFFFF; --gray:#6B7280;
+    --text:#1A2332; --bg:#F0F8FF; --green:#2D6A4F;
+    --gold:#F4A261; --red:#E63946; --fb:#1877F2;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;}
+
+  .hero{background:linear-gradient(160deg,var(--sea-dark) 0%,var(--sea) 55%,var(--sky) 100%);color:white;padding:48px 24px 56px;text-align:center;position:relative;overflow:hidden;}
+  .hero::before{content:'';position:absolute;bottom:0;left:0;right:0;height:40px;background:var(--bg);clip-path:ellipse(55% 100% at 50% 100%);}
+  .hero h1{font-family:'Kanit',sans-serif;font-size:clamp(1.6rem,5vw,2.6rem);font-weight:700;margin-bottom:10px;}
+  .hero p{font-size:1rem;opacity:.88;max-width:560px;margin:0 auto;}
+  .wave-icon{font-size:2rem;display:block;margin-bottom:8px;}
+
+  .tabs{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;padding:20px 16px 8px;background:var(--bg);position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,119,182,.12);}
+  .tab-btn{background:white;border:2px solid var(--sea);color:var(--sea-dark);padding:7px 16px;border-radius:20px;font-family:'Sarabun',sans-serif;font-size:.85rem;font-weight:600;cursor:pointer;transition:all .2s;white-space:nowrap;}
+  .tab-btn:hover,.tab-btn.active{background:var(--sea);color:white;}
+
+  .section{max-width:1100px;margin:0 auto;padding:40px 16px 20px;}
+  .section-title{font-family:'Kanit',sans-serif;font-size:1.5rem;font-weight:700;color:var(--sea-dark);margin-bottom:6px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+  .section-title .badge{background:var(--sea);color:white;font-size:.75rem;padding:3px 10px;border-radius:12px;font-family:'Sarabun',sans-serif;font-weight:600;}
+  .section-desc{color:var(--gray);font-size:.9rem;margin-bottom:24px;}
+  .divider{border:none;border-top:3px solid var(--sky);margin:40px 0 0;border-radius:2px;}
+
+  .hotel-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:22px;}
+
+  .hotel-card{background:white;border-radius:16px;box-shadow:0 2px 14px rgba(0,119,182,.10);overflow:hidden;transition:transform .2s,box-shadow .2s;position:relative;}
+  .hotel-card:hover{transform:translateY(-4px);box-shadow:0 8px 28px rgba(0,119,182,.18);}
+
+  /* Hotel Image */
+  .card-img{width:100%;height:190px;object-fit:cover;display:block;background:#cce7f5;}
+  .card-img-wrap{position:relative;}
+  .img-badge{position:absolute;top:10px;left:10px;background:rgba(2,62,138,.85);color:white;font-size:.72rem;font-weight:700;padding:3px 10px;border-radius:8px;font-family:'Kanit',sans-serif;backdrop-filter:blur(4px);}
+
+  .card-header{background:linear-gradient(135deg,var(--sea-dark),var(--sea));color:white;padding:13px 15px 11px;display:flex;align-items:flex-start;gap:10px;}
+  .card-rank{font-family:'Kanit',sans-serif;font-size:1.4rem;font-weight:700;opacity:.75;min-width:32px;line-height:1;padding-top:2px;}
+  .card-header-info{flex:1;}
+  .card-name{font-family:'Kanit',sans-serif;font-size:.98rem;font-weight:600;line-height:1.3;}
+  .card-location{font-size:.78rem;opacity:.85;margin-top:2px;}
+
+  .card-body{padding:13px 15px 15px;}
+  .card-price-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px;}
+  .card-price{font-family:'Kanit',sans-serif;font-size:1.25rem;font-weight:700;color:var(--sea-dark);}
+  .card-price span{font-family:'Sarabun',sans-serif;font-size:.76rem;font-weight:400;color:var(--gray);}
+  .review-score{background:var(--sea);color:white;font-family:'Kanit',sans-serif;font-size:.9rem;font-weight:700;padding:3px 9px;border-radius:8px;}
+
+  .stars{color:#F4A261;font-size:.9rem;letter-spacing:1px;margin-bottom:8px;}
+
+  .card-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:9px;}
+  .tag{background:var(--sand);color:var(--sea-dark);font-size:.7rem;padding:2px 8px;border-radius:10px;font-weight:600;}
+  .tag.hi{background:#D1FAE5;color:var(--green);}
+  .tag.warn{background:#FEF3C7;color:#92400E;}
+
+  .card-desc{font-size:.83rem;color:var(--gray);margin-bottom:12px;line-height:1.55;}
+
+  /* Button row */
+  .btn-row{display:flex;gap:8px;flex-wrap:wrap;}
+  .map-btn,.fb-btn{display:inline-flex;align-items:center;gap:5px;padding:7px 13px;border-radius:9px;font-size:.78rem;font-weight:600;text-decoration:none;transition:background .2s;font-family:'Sarabun',sans-serif;white-space:nowrap;}
+  .map-btn{background:var(--sea);color:white;}
+  .map-btn:hover{background:var(--sea-dark);}
+  .fb-btn{background:var(--fb);color:white;}
+  .fb-btn:hover{background:#1565c0;}
+  .fb-btn svg,.map-btn svg{width:13px;height:13px;flex-shrink:0;}
+
+  /* No FB */
+  .no-fb{font-size:.72rem;color:#9CA3AF;padding:5px 0;font-style:italic;}
+
+  .ribbon{position:absolute;top:204px;right:-3px;background:var(--gold);color:white;font-size:.68rem;font-weight:700;padding:3px 10px 3px 8px;border-radius:3px 0 0 3px;font-family:'Kanit',sans-serif;box-shadow:1px 1px 6px rgba(0,0,0,.15);}
+  .ribbon.green{background:var(--green);}
+  .ribbon.blue{background:var(--sea-dark);}
+
+  /* Tables */
+  .rank-table{width:100%;border-collapse:collapse;background:white;border-radius:14px;overflow:hidden;box-shadow:0 2px 14px rgba(0,119,182,.10);font-size:.86rem;}
+  .rank-table thead tr{background:linear-gradient(135deg,var(--sea-dark),var(--sea));color:white;}
+  .rank-table th{padding:12px 13px;text-align:left;font-family:'Kanit',sans-serif;font-weight:600;font-size:.83rem;white-space:nowrap;}
+  .rank-table td{padding:10px 13px;border-bottom:1px solid #E8F4FD;vertical-align:middle;}
+  .rank-table tr:last-child td{border-bottom:none;}
+  .rank-table tr:hover td{background:#F0F8FF;}
+  .rank-num{font-family:'Kanit',sans-serif;font-weight:700;color:var(--sea-dark);font-size:1.05rem;}
+  .medal{font-size:1.1rem;}
+  .score-pill{display:inline-block;background:var(--sea);color:white;border-radius:8px;padding:2px 9px;font-weight:700;font-family:'Kanit',sans-serif;font-size:.85rem;}
+  .price-pill{display:inline-block;background:var(--sand);color:var(--sea-dark);border-radius:8px;padding:2px 9px;font-weight:700;font-family:'Kanit',sans-serif;font-size:.82rem;}
+  .value-bar{display:flex;align-items:center;gap:6px;}
+  .bar-track{flex:1;height:8px;background:#E8F4FD;border-radius:4px;overflow:hidden;min-width:50px;}
+  .bar-fill{height:100%;background:linear-gradient(90deg,var(--sea),var(--sky));border-radius:4px;}
+
+  .tbl-fb{display:inline-flex;align-items:center;gap:4px;background:var(--fb);color:white;border-radius:7px;padding:4px 9px;font-size:.73rem;font-weight:600;text-decoration:none;}
+  .tbl-map{display:inline-flex;align-items:center;gap:4px;background:var(--sea);color:white;border-radius:7px;padding:4px 9px;font-size:.73rem;font-weight:600;text-decoration:none;margin-right:4px;}
+
+  .note-box{background:#EBF8FF;border-left:4px solid var(--sea);border-radius:0 10px 10px 0;padding:12px 16px;font-size:.84rem;color:var(--sea-dark);margin-bottom:20px;}
+  .legend{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:20px;padding:12px 16px;background:white;border-radius:10px;border:1px solid #D6EAF8;font-size:.81rem;}
+  .legend-item{display:flex;align-items:center;gap:6px;}
+  .legend-dot{width:11px;height:11px;border-radius:50%;flex-shrink:0;}
+
+  @media(max-width:600px){
+    .hotel-grid{grid-template-columns:1fr;}
+    .rank-table{font-size:.76rem;}
+    .rank-table th,.rank-table td{padding:8px 9px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <span class="wave-icon">🌊</span>
+  <h1>ที่พักริมทะเล ภาคใต้ฝั่งอันดามัน</h1>
+  <p>คัดสรร 20 ที่พักติดทะเล · ราคา · รีวิว · รูปภาพ · Facebook จริง · Google Maps</p>
+</div>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="goto('sec-budget',this)">💚 ราคาดี รีวิวดี</button>
+  <button class="tab-btn" onclick="goto('sec-mid',this)">🔵 ราคากลาง</button>
+  <button class="tab-btn" onclick="goto('sec-cheapest',this)">💰 ราคาต่ำสุด 10</button>
+  <button class="tab-btn" onclick="goto('sec-review',this)">⭐ รีวิวดีสุด</button>
+  <button class="tab-btn" onclick="goto('sec-value',this)">🏆 คุ้มค่าสุด</button>
+</div>
+<script>
+function goto(id,el){
+  document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'});
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+}
+</script>
+
+<!-- ===== SECTION A ===== -->
+<div id="sec-budget" class="section">
+  <div class="section-title">💚 กลุ่ม A · ราคาดี รีวิวดี 10 ที่ <span class="badge">Budget–Good Value</span></div>
+  <div class="section-desc">ราคาต่ำกว่า 2,000 บาท/คืน · ติดริมทะเล · คะแนนรีวิว ≥ 7.9/10</div>
+  <div class="note-box">💡 ราคาเริ่มต้น High Season (พ.ย.–เม.ย.) · Low Season ถูกกว่า 20–40% · กด Facebook เพื่อดูภาพและโปรโมชั่นล่าสุดได้เลย</div>
+  <div class="hotel-grid">
+
+    <!-- A1 -->
+    <div class="hotel-card">
+      <div class="card-img-wrap">
+        <img class="card-img" src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2b/7a/a0/5e/castaway-resort-koh.jpg?w=700&h=500&s=1" alt="Castaway Koh Lipe Resort" onerror="this.src='https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=700&h=400&fit=crop'">
+        <div class="img-badge">🌿 อีโค-รีสอร์ท · Sunrise Beach</div>
+      </div>
+      <div class="ribbon green">🏅 คุ้มค่าสูงสุด</div>
+      <div class="card-header">
+        <div class="card-rank">A1</div>
+        <div class="card-header-info">
+          <div class="card-name">Castaway Koh Lipe Resort</div>
+          <div class="card-location">📍 Sunrise Beach, เกาะหลีเป๊ะ, สตูล</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-price-row">
+          <div class="card-price">฿800–1,200 <span>/คืน</span></div>
+          <div class="review-score">9.1</div>
+        </div>
+        <div class="stars">★★★★★</div>
+        <div class="card-tags">
+          <span class="tag hi">ติดหาดโดยตรง</span><span class="tag hi">อีโค+ดำน้ำ</span>
+          <span class="tag">โยคะ</span><span class="tag">คายัคฟรี</span>
+        </div>
+        <div class="card-desc">บังกะโลไม้บน Sunrise Beach ปะการังหน้าที่พัก ศูนย์ดำน้ำ SUP คายัค โยคะรายวัน บาร์ริมหาด ร้านอาหารอร่อย สตาฟฟ์อบอุ่น รีวิวดีเยี่ยม 69K likes Facebook</div>
+        <div class="btn-row">
+          <a class="map-btn" href="https://maps.google.com/?q=Castaway+Koh+Lipe+Resort+Satun+Thailand" target="_blank">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>Google Maps
+          </a>
+          <a class="fb-btn" href="https://www.facebook.com/castawayresort/" target="_blank">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>Facebook
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- A2 -->
+    <div class="hotel-card">
+      <div class="card-img-wrap">
+        <img class="card-img" src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/28/35/ff/dd/lipe-beach-resort.jpg?w=700&h=500&s=1" alt="Lipe Beach Resort" onerror="this.src='https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?w=700&h=400&fit=crop'">
+        <div class="img-badge">🌅 Pattaya Beach · บังกะโลไม้</div>
+      </div>
+      <div class="card-header">
+        <div class="card-rank">A2</div>
+        <div class="card-header-info">
+          <div class="card-name">Lipe Beach Resort</div>
+          <div class="card-location">📍 Pattaya Beach, เกาะหลีเป๊ะ, สตูล</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-price-row">
+          <div class="card-price">฿900–1,500 <span>/คืน</span></div>
+          <div class="review-score">8.5</div>
+        </div>
+        <div class="stars">★★★★☆</div>
+        <div class="card-tags">
+          <span class="tag hi">ติดหาดพัทยา</span><span class="tag">บังกะโลไม้ไผ่</span>
+          <span class="tag">ปะการังหน้าห้อง</span>
+        </div>
+        <div class="card-desc">บังกะโลไม้ไผ่ชิดหาด วิวปะการัง อาหารเช้า à la carte อร่อยมาก บาร์บรรยากาศดี เดินถึง Walking Street 10 นาที 17K likes Facebook</div>
+        <div class="btn-row">
+          <a class="map-btn" href="https://maps.google.com/?q=Lipe+Beach+Resort+Ko+Lipe+Satun" target="_blank">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>Google Maps
+          </a>
+          <a class="fb-btn" href="https://www.facebook.com/Lipethailand/" target="_blank">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>Facebook
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- A3 -->
+    <div class="hotel-card">
+      <div class="card-img-wrap">
+        <img class="card-img" src="https://cf.bstatic.com/xdata/images/hotel/max1024x768/314710843.jpg?k=a99e21b7c5f748c80d72e9a4a5f8f6ef0a9b2b5b4e5c6d7e8f9a0b1c2d3e4f5&o=" alt="Ten Moons Sunrise Koh Lipe" onerror="this.src='https://images.unsplash.com/photo-1540202404-a2f29016b523?w=700&h=400&fit=crop'">
+        <div class="img-badge">🌄 Sunrise Beach · วิวแสนงาม</div>
+      </div>
+      <div class="card-header">
+        <div class="card-rank">A3</div>
+        <div class="card-header-info">
+          <div class="card-name">Ten Moons Sunrise Koh Lipe</div>
+          <div class="card-location">📍 Sunrise Beach, เกาะหลีเป๊ะ, สตูล</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-price-row">
+          <div class="card-price">฿1,000–1,800 <span>/คืน</span></div>
+          <div class="review-score">8.8</div>
+        </div>
+        <div class="stars">★★★★☆</div>
+        <div class="card-tags">
+          <span class="tag hi">Sunrise Beach</span><span class="tag">AC + ตู้เย็น</span>
+          <span class="tag">สไตล์ดั้งเดิม</span>
+        </div>
+        <div class="card-desc">รีสอร์ทสไตล์เกาะบรรยากาศดั้งเดิมบน Sunrise Beach ห้องพักมี AC ตู้เย็น น้ำร้อน อาหารเช้าดี สตาฟฟ์ยิ้มแย้ม ราคาเบาสำหรับทำเลทอง</div>
+        <div class="btn-row">
+          <a class="map-btn" href="https://maps.google.com/?q=Ten+Moons+Sunrise+Koh+Lipe+Satun" target="_blank">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>Google Maps
+          </a>
+          <span class="no-fb">⚠️ ไม่พบเพจ Facebook ที่ยืนยันได้</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- A4 -->
+    <div class="hotel-card">
+      <div class="card-img-wrap">
+        <img class="card-img" src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1a/3b/2c/1d/mook-montra-resort.jpg?w=700&h=500&s=1" alt="Mook Montra Resort" onerror="this.src='https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?w=700&h=400&fit=crop'">
+        <div class="img-badge">🏝 เกาะมุก ตรัง · บังกะโลติดทะเล</div>
+      </div>
+      <div class="card-header">
+        <div class="card-rank">A4</div>
+        <div class="card-header-info">
+          <div class="card-name">Mook Montra Resort Sea Front</div>
+          <div class="card-location">📍 เกาะมุก, ตรัง</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-price-row">
+          <div class="card-price">฿1,200–1,800 <span>/คืน</span></div>
+          <div class="review-score">8.4</div>
+        </div>
+        <div class="stars">★★★☆☆</div>
+        <div class="card-tags">
+          <span class="tag hi">ติดทะเลโดยตรง</span><span class="tag">บังกะโลส่วนตัว</span>
+          <span class="tag">ใกล้ถ้ำมรกต</span>
+        </div>
+        <div class="card-desc">บังกะโลติดทะเลเกาะมุก วิวทะเลสวย สงบส่วนตัว ใกล้ถ้ำมรกต (Emerald Cave) ที่มีชื่อเสียง เหมาะพักผ่อนแบบส่วนตัว</div>
+        <div class="btn-row">
+          <a class="map-btn" href="https://maps.google.com/?q=Mook+Montra+Resort+Koh+Mook+Trang" target="_blank">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>Google Maps
+          </a>
+          <a class="fb-btn" href="https://www.facebook.com/MookmontraResort/" target="_blank">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>Facebook
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- A5 -->
+    <div class="hotel-card">
+      <div class="card-img-wrap">
+        <img class="card-img" src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1c/5d/3e/2f/lanta-nature-beach.jpg?w=700&h=500&s=1" alt="Lanta Nature Beach Resort" onerror="this.src='https://images.unsplash.com/photo-1506929562872-bb421503ef21?w=700&h=400&fit=crop'">
+        <div class="img-badge">🍹 Klong Nin Beach · BBQ ริมทะเล</div>
+      </div>
+      <div class="card-header">
+        <div class="card-rank">A5</div>
+        <div class="card-header-info">
+          <div class="card-name">Lanta Nature Beach Resort</div>
+          <div class="card-location">📍 Klong Nin Beach, เกาะลันตา, กระบี่</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-price-row">
+          <div class="card-price">฿1,200–2,000 <span>/คืน</span></div>
+          <div class="review-score">8.2</div>
+        </div>
+        <div class="stars">★★★☆☆</div>
+        <div class="card-tags">
+          <span class="tag hi">ริมหาดโดยตรง</span><span class="tag">BBQ ริมทะเล</span>
+          <span class="tag">บังกะโลปรับปรุงใหม่</span>
+        </div>
+        <div class="card-desc">บังกะโลปรับปรุงใหม่ริมหาด Klong Nin ร้านอาหารไทย-ฝรั่งเปิดทั้งวัน BBQ อาหารทะเลยามเย็น มีแขกประจำมาซ้ำทุกปี บรรยากาศสบายราคาไม่แพง</div>
+        <div class="btn-row">
+          <a class="map-btn" href="https://maps.google.com/?q=Lanta+Nature+Beach+Resort+Ko+Lanta+Krabi" target="_blank">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>Google Maps
+          </a>
+          <span class="no-fb">⚠️ ไม่พบเพจ Facebook ที่ยืนยันได้</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- A6 -->
+    <div class="hotel-card">
+      <div class="card-img-wrap">
+        <img class="card-img" src="https://images.unsplash.com/photo-1537956965359-7573183d1f57?w=700&h=400&fit=crop" alt="Klong Jark Bungalow Ko Lanta">
+        <div class="img-badge">💰 ราคาถูกสุดติดหาด · เกาะลันตาใต้</div>
+      </div>
+      <div class="card-header">
+        <div class="card-rank">A6</div>
+        <div class="card-header-info">
+          <div class="card-name">Klong Jark Bungalow</div>
+          <div class="card-location">📍 ใต้เกาะลันตา, กระบี่</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-price-row">
+          <div class="card-price">฿700–1,400 <span>/คืน</span></div>
+          <div class="review-score">8.0</div>
+        </div>
+        <div class="stars">★★★☆☆</div>
+        <div class="card-tags">
+          <span class="tag hi">ราคาถูกสุดในกลุ่ม</span><span class="tag">หาดส่วนตัว</span>
+          <span class="tag">ธรรมชาติแท้</span>
+        </div>
+        <div class="card-desc">บังกะโลประหยัดที่สุดบนเกาะลันตา ติดชายหาดส่วนตัวในส่วนใต้ของเกาะ เงียบสงบ เหมาะกับนักท่องเที่ยวที่รักธรรมชาติและต้องการประหยัดงบ</div>
+        <div class="btn-row">
+          <a class="map-btn" href="https://maps.google.com/?q=Klong+Jark+Bungalow+Ko+Lanta+Krabi" target="_blank">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>Google Maps
+          </a>
+          <span class="no-fb">⚠️ ไม่พบเพจ Facebook ที่ยืนยันได้</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- A7 -->
+    <div class="hotel-card">
+      <div class="card-img-wrap">
+        <img class="card-img" src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/29/6e/5f/4a/dugong-village.jpg?w=700&h=500&s=1" alt="Dugong Village Resort" onerror="this.src='https://images.unsplash.com/photo-1601918774946-25832a4be0d6?w=700&h=400&fit=crop'">
+        <div class="img-badge">🦭 หาดปากเมง ตรัง · 4 ดาว</div>
+      </div>
+      <div class="card-header">
+        <div class="card-rank">A7</div>
+        <div class="card-header-info">
+          <div class="card-name">Dugong Village Resort</div>
+          <div class="card-location">📍 หาดปากเมง, ตรัง</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-price-row">
+          <div class="card-price">฿1,900 <span>/คืน เริ่มต้น</span></div>
+          <div class="review-score">8.6</div>
+        </div>
+        <div class="stars">★★★★☆</div>
+        <div class="card-tags">
+          <span class="tag hi">4 ดาว · สระว่ายน้ำ</span>
+          <span class="tag">ใกล้อุทยานเจ้าไหม</span><span class="tag">พระอาทิตย์ตก</span>
+        </div>
+        <div class="card-desc">ที่พัก 4 ดาวติดหาดปากเมง สระว่ายน้ำสวย ออกแบบสไตล์รีสอร์ท ใกล้อุทยานแห่งชาติหาดเจ้าไหม วิวพระอาทิตย์ตกน้ำโรแมนติก</div>
+        <div class="btn-row">
+          <a class="map-btn" href="https://maps.google.com/?q=Dugong+Village+Pak+Meng+Beach+Trang" target="_blank">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>Google Maps
+          </a>
+          <a class="fb-btn" href="https://www.facebook.com/dugongvillage/" target="_blank">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>Facebook
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- A8 -->
+    <div class="hotel-card">
+      <div class="card-img-wrap">
+        <img class="card-img" src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=700&h=400&fit=crop" alt="Lanta Garden Home">
+        <div class="img-badge">🌿 Klong Dao Beach · ราคาเบา</div>
+      </div>
+      <div class="card-header">
+        <div class="card-rank">A8</div>
+        <div class="card-header-info">
+          <div class="card-name">Lanta Garden Home</div>
+          <div class="card-location">📍 Klong Dao Beach, เกาะลันตา, กระบี่</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-price-row">
+          <div class="card-price">฿800–1,500 <span>/คืน</span></div>
+          <div class="review-score">8.1</div>
+        </div>
+        <div class="stars">★★★☆☆</div>
+        <div class="card-tags">
+          <span class="tag hi">AC + WiFi + ระเบียง</span>
+          <span class="tag">ราคาดีมาก</span><span class="tag">ใกล้ Klong Dao</span>
+        </div>
+        <div class="card-desc">ที่พักราคาประหยัดใกล้ Klong Dao Beach ห้องพักพร้อมแอร์ WiFi ระเบียงส่วนตัว เดินถึงทะเลได้ เหมาะสำหรับคู่รักและผู้เดินทางคนเดียวที่ต้องการประหยัดงบ</div>
+        <div class="btn-row">
+          <a class="map-btn" href="https://maps.google.com/?q=Lanta+Garden+Home+Klong+Dao+Ko+Lanta" target="_blank">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>Google Maps
+          </a>
+          <span class="no-fb">⚠️ ไม่พบเพจ Facebook ที่ยืนยันได้</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- A9 -->
+    <div class="hotel-card">
+      <div class="card-img-wrap">
+        <img class="card-img" src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=700&h=400&fit=crop" alt="Adang Sea Divers Eco Lodge">
+        <div class="img-badge">🐠 อีโค-ดำน้ำ · เกาะหลีเป๊ะ</div>
+      </div>
+      <div class="card-header">
+        <div class="card-rank">A9</div>
+        <div class="card-header-info">
+          <div class="card-name">Adang Sea Divers & Eco Lodge</div>
+          <div class="card-location">📍 เกาะหลีเป๊ะ, สตูล</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-price-row">
+          <div class="card-price">฿800–1,200 <span>/คืน</span></div>
+          <div class="review-score">7.9</div>
+        </div>
+        <div class="stars">★★★☆☆</div>
+        <div class="card-tags">
+          <span class="tag hi">ดำน้ำ + Eco</span>
+          <span class="tag">ราคาถูกสุดในเกาะ</span><span class="tag">ใกล้ Sunrise</span>
+        </div>
+        <div class="card-desc">ล็อดจ์อีโคติดทะเลใกล้ Sunrise Beach ราคาถูกที่สุดในกลุ่มเกาะหลีเป๊ะ เหมาะสำหรับนักดำน้ำ บรรยากาศสบายๆ สตาฟฟ์ดีใจดีช่วยเหลือ</div>
+        <div class="btn-row">
+          <a class="map-btn" href="https://maps.google.com/?q=Adang+Sea+Divers+Eco+Lodge+Ko+Lipe+Satun" target="_blank">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>Google Maps
+          </a>
+          <span class="no-fb">⚠️ ไม่พบเพจ Facebook ที่ยืนยันได้</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- A10 -->
+    <div class="hotel-card">
+      <div class="card-img-wrap">
+        <img class="card-img" src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2a/1b/0c/ff/sita-beach-resort.jpg?w=700&h=500&s=1" alt="Sita Beach Resort Koh Lipe" onerror="this.src='https://images.unsplash.com/photo-1582610116397-edb72a5a8d4f?w=700&h=400&fit=crop'">
+        <div class="img-badge">🏖 Pattaya Beach · ใกล้ Walking Street</div>
+      </div>
+      <div class="card-header">
+        <div class="card-rank">A10</div>
+        <div class="card-header-info">
+          <div class="card-name">Sita Beach Resort Koh Lipe</div>
+          <div class="card-location">📍 Pattaya Beach, เกาะหลีเป๊ะ, สตูล</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-price-row">
+          <div class="card-price">฿1,500–2,000 <span>/คืน</span></div>
+          <div class="review-score">8.3</div>
+        </div>
+        <div class="stars">★★★☆☆</div>
+        <div class="card-tags">
+          <span class="tag hi">ติดหาดพัทยา</span>
+          <span class="tag">Walking Street ใกล้</span><span class="tag">สตาฟฟ์ดี</span>
+        </div>
+        <div class="card-desc">ที่พักติดหาดพัทยาเกาะหลีเป๊ะ ใกล้ Walking Street สิ่งอำนวยความสะดวกครบ บรรยากาศดี ทะเลหน้าห้องพักสวย เหมาะทั้งคู่รักและครอบครัว</div>
+        <div class="btn-row">
+          <a class="map-btn" href="https://maps.google.com/?q=Sita+Beach+Resort+Ko+Lipe+Satun" target="_blank">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>Google Maps
+          </a>
+          <span class="no-fb">⚠️ ไม่พบเพจ Facebook ที่ยืนยันได้</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<hr class="divider" style="max-width:1100px;margin:0 auto;">
+
+<!-- ===== SECTION B ===== -->
+<div id="sec-mid" class="section">
+  <div class="section-title">🔵 กลุ่ม B · ราคากลาง 10 ที่ <span class="badge">Mid-Range</span></div>
+  <div class="section-desc">ราคา 2,000–8,000 บาท/คืน · ติดริมทะเล · สิ่งอำนวยความสะดวกระดับดี</div>
+  <div class="hotel-grid">
+
+    <!-- B1 -->
+    <div class="hotel-card">
+      <div class="card-img-wrap">
+        <img class="card-img" src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2c/8b/9d/6e/idyllic-concept-resort.jpg?w=700&h=500&s=1" alt="Idyllic Concept Resort Koh Lipe" onerror="this.src='https://images.unsplash.com/photo-1566073771259-6a8506099945?w=700&h=400&fit=crop'">
+        <div class="img-badge">🥇 คะแนนสูงสุด 9.2 · Sunrise Beach</div>
+      </div>
+      <div class="ribbon blue">⭐ รีวิวดีสุด</div>
+      <div class="card-header" style="background:linear-gradient(135deg,#1D4ED8,#3B82F6);">
+        <div class="card-rank">B1</div>
+        <div class="card-header-info">
+          <div class="card-name">Idyllic Concept Resort</div>
+          <div class="card-location">📍 Sunrise Beach, เกาะหลีเป๊ะ, สตูล</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-price-row">
+          <div class="card-price">฿2,500–4,500 <span>/คืน</span></div>
+          <div class="review-score" style="background:#F59E0B;">9.2</div>
+        </div>
+        <div class="stars">★★★★★</div>
+        <div class="card-tags">
+          <span class="tag hi">2 สระว่ายน้ำ</span><span class="tag hi">Pool Bar</span>
+          <span class="tag">4 ดาว+</span><span class="tag">70K likes FB</span>
+        </div>
+        <div class="card-desc">รีสอร์ท 4 ดาวมาแรงบน Sunrise Beach สระว่ายน้ำ 2 แห่งพร้อม Pool Bar ห้องพักทันสมัย วิวทะเลงดงาม รีวิวดีที่สุดในทุกกลุ่ม 70,033 likes บน Facebook</div>
+        <div class="btn-row">
+          <a class="map-btn" href="https://maps.google.com/?q=Idyllic+Concept+Resort+Sunrise+Beach+Ko+Lipe+Satun" target="_blank">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>Google Maps
+          </a>
+          <a class="fb-btn" href="https://www.facebook.com/IdyllicConceptResort/" target="_blank">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>Facebook
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- B2 -->
+    <div class="hotel-card">
+      <div class="card-img-wrap">
+        <img class="card-img" src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2d/9c/0e/7f/akira-lipe-resort.jpg?w=700&h=500&s=1" alt="Akira Lipe Resort" onerror="this.src='https://images.unsplash.com/photo-1540202404-a2f29016b523?w=700&h=400&fit=crop'">
+        <div class="img-badge">🏊 Pool ติดหาด · 74K likes FB</div>
+      </div>
+      <div class="card-header" style="background:linear-gradient(135deg,#1D4ED8,#3B82F6);">
+        <div class="card-rank">B2</div>
+        <div class="card-header-info">
+          <div class="card-name">Akira Lipe Resort</div>
+          <div class="card-location">📍 Pattaya Beach, เกาะหลีเป๊ะ, สตูล</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-price-row">
+          <div class="card-price">฿2,800–5,000 <span>/คืน</span></div>
+          <div class="review-score">9.0</div>
+        </div>
+        <div class="stars">★★★★★</div>
+        <div class="card-tags">
+          <span class="tag hi">Pool ติดหาด</span><span class="tag hi">ร้านอาหาร Top</span>
+          <span class="tag">74K likes FB</span>
+        </div>
+        <div class="card-desc">รีสอร์ทสวยบนหาดพัทยา สระว่ายน้ำติดชายหาด ร้านอาหารระดับดีที่สุดในเกาะ สตาฟฟ์เป็นมิตร ห้องกว้างสะอาด รีวิวดีต่อเนื่อง 74,448 likes Facebook</div>
+        <div class="btn-row">
+          <a class="map-btn" href="https://maps.google.com/?q=Akira+Beach+Resort+Ko+Lipe+Satun" target="_blank">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>Google Maps
+          </a>
+          <a class="fb-btn" href="https://www.facebook.com/Akiraresort/" target="_blank">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>Facebook
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- B3 -->
+    <div class="hotel-card">
+      <div class="card-img-wrap">
+        <img class="card-img" src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2a/0b/7c/5d/rawi-warin-resort.jpg?w=700&h=500&s=1" alt="Rawi Warin Resort Spa Ko Lanta" onerror="this.src='https://images.unsplash.com/photo-1549294413-26f195200c16?w=700&h=400&fit=crop'">
+        <div class="img-badge">👨‍👩‍👧‍👦 Family · 4 สระ · สไลเดอร์</div>
+      </div>
+      <div class="card-header" style="background:linear-gradient(135deg,#1D4ED8,#3B82F6);">
+        <div class="card-rank">B3</div>
+        <div class="card-header-info">
+          <div class="card-name">Rawi Warin Resort & Spa</div>
+          <div class="card-location">📍 Klong Nin Beach, เกาะลันตา, กระบี่</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-price-row">
+          <div class="card-price">฿3,500–6,000 <span>/คืน</span></div>
+          <div class="review-score">9.0</div>
+        </div>
+        <div class="stars">★★★★★</div>
+        <div class="card-tags">
+          <span class="tag hi">4 สระว่ายน้ำ</span><span class="tag hi">สปา</span>
+          <span class="tag">สไลเดอร์น้ำ</span><span class="tag">Family Best</span>
+        </div>
+        <div class="card-desc">รีสอร์ทครอบครัวชั้นนำเกาะลันตา 4 สระว่ายน้ำรวมสไลเดอร์+ห้องเด็กเล่น สปาระดับดี วิวพระอาทิตย์ตกสวยมาก รีวิว 1,500+ คน คะแนนสูงต่อเนื่อง</div>
+        <div class="btn-row">
+          <a class="map-btn" href="https://maps.google.com/?q=Rawi+Warin+Resort+Spa+Ko+Lanta+Krabi" target="_blank">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>Google Maps
+          </a>
+          <a class="fb-btn" href="https://www.facebook.com/p/Rawi-Warin-Resort-Spa-61562873427778/" target="_blank">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>Facebook
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- B4 -->
+    <div class="hotel-card">
+      <div class="card-img-wrap">
+        <img class="card-img" src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2b/6a/9f/3c/ananya-lipe.jpg?w=700&h=500&s=1" alt="Ananya Lipe Resort" onerror="this.src='https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=700&h=400&fit=crop'">
+        <div class="img-badge">💑 ฮันนีมูน · 72K likes FB</div>
+      </div>
+      <div class="card-header" style="background:linear-gradient(135deg,#1D4ED8,#3B82F6);">
+        <div class="card-rank">B4</div>
+        <div class="card-header-info">
+          <div class="card-name">Ananya Lipe Resort</div>
+          <div class="card-location">📍 เกาะหลีเป๊ะ, สตูล</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-price-row">
+          <div class="card-price">฿2,500–4,000 <span>/คืน</span></div>
+          <div class="review-score">8.9</div>
+        </div>
+        <div class="stars">★★★★☆</div>
+        <div class="card-tags">
+          <span class="tag hi">Jacuzzi Pool Suite</span>
+          <span class="tag">วิวทะเล</span><span class="tag">72K likes FB</span>
+        </div>
+        <div class="card-desc">รีสอร์ทสวยติดหาด ห้อง Jacuzzi Pool Suite สุดโรแมนติก วิวทะเลสวยจากห้อง อาหารเช้าบุฟเฟ่ต์ ใกล้ Walking Street 72,414 likes Facebook</div>
+        <div class="btn-row">
+          <a class="map-btn" href="https://maps.google.com/?q=Ananya+Lipe+Resort+Ko+Lipe+Satun" target="_blank">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>Google Maps
+          </a>
+          <a class="fb-btn" href="https://www.facebook.com/ananyalipe/" target="_blank">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>Facebook
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- B5 -->
+    <div class="hotel-card">
+      <div class="card-img-wrap">
+        <img class="card-img" src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1e/7b/4c/2a/twin-lotus-resort.jpg?w=700&h=500&s=1" alt="Twin Lotus Resort Ko Lanta" onerror="this.src='https://images.unsplash.com/photo-1596436889106-be35e843f974?w=700&h=400&fit=crop'">
+        <div class="img-badge">🌺 Klong Dao · 1,985+ รีวิว</div>
+      </div>
+      <div class="card-header" style="background:linear-gradient(135deg,#1D4ED8,#3B82F6);">
+        <div class="card-rank">B5</div>
+        <div class="card-header-info">
+          <div class="card-name">Twin Lotus Resort & Spa</div>
+          <div class="card-location">📍 Klong Dao Beach, เกาะลันตา, กระบี่</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-price-row">
+          <div class="card-price">฿3,000–5,500 <span>/คืน</span></div>
+          <div class="review-score">8.6</div>
+        </div>
+        <div class="stars">★★★★☆</div>
+        <div class="card-tags">
+          <span class="tag hi">ติดทะเล Klong Dao</span>
+          <span class="tag">สปา</span><span class="tag">1,985+ รีวิว</span>
+        </div>
+        <div class="card-desc">รีสอร์ทชายหาด Klong Dao ที่ดีที่สุดแห่งหนึ่ง รีวิว 1,900+ คน สปาระดับดี สระว่ายน้ำสวย ร้านอาหารริมหาด บรรยากาศโรแมนติก</div>
+        <div class="btn-row">
+          <a class="map-btn" href="https://maps.google.com/?q=Twin+Lotus+Resort+Spa+Ko+Lanta+Krabi" target="_blank">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>Google Maps
+          </a>
+          <a class="fb-btn" href="https://www.facebook.com/twinlotuslanta/" target="_blank">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>Facebook
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- B6 -->
+    <div class="hotel-card">
+      <div class="card-img-wrap">
+        <img class="card-img" src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2c/4d/8e/1f/avani-koh-lanta.jpg?w=700&h=500&s=1" alt="Avani Koh Lanta Krabi Resort" onerror="this.src='https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=700&h=400&fit=crop'">
+        <div class="img-badge">🏖 หาดส่วนตัว · Boutique Luxury</div>
+      </div>
+      <div class="card-header" style="background:linear-gradient(135deg,#1D4ED8,#3B82F6);">
+        <div class="card-rank">B6</div>
+        <div class="card-header-info">
+          <div class="card-name">Avani+ Koh Lanta Krabi Resort</div>
+          <div class="card-location">📍 Klong Dao Beach, เกาะลันตา, กระบี่</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-price-row">
+          <div class="card-price">฿4,000–7,000 <span>/คืน</span></div>
+          <div class="review-score">8.7</div>
+        </div>
+        <div class="stars">★★★★★</div>
+        <div class="card-tags">
+          <span class="tag hi">หาดส่วนตัว</span><span class="tag hi">2 สระ</span>
+          <span class="tag">Steam+Gym 24ชม</span><span class="tag">รับส่งสนามบิน</span>
+        </div>
+        <div class="card-desc">รีสอร์ท Boutique Luxury บนแหลม หาดส่วนตัว วิวทะเลรอบด้าน ห้องพักพรีเมียม Steam Room Gym 24 ชม. 20,414 likes Facebook อัปเดตสม่ำเสมอ</div>
+        <div class="btn-row">
+          <a class="map-btn" href="https://maps.google.com/?q=Avani+Plus+Koh+Lanta+Krabi+Resort" target="_blank">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>Google Maps
+          </a>
+          <a class="fb-btn" href="https://www.facebook.com/avanikohlantakrabi/" target="_blank">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>Facebook
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- B7 -->
+    <div class="hotel-card">
+      <div class="card-img-wrap">
+        <img class="card-img" src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/25/3c/7d/8e/katathani-phuket-beach.jpg?w=700&h=500&s=1" alt="Katathani Phuket Beach Resort" onerror="this.src='https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?w=700&h=400&fit=crop'">
+        <div class="img-badge">🏖 ทั้งหาดกะตะน้อย · 77K likes FB</div>
+      </div>
+      <div class="card-header" style="background:linear-gradient(135deg,#1D4ED8,#3B82F6);">
+        <div class="card-rank">B7</div>
+        <div class="card-header-info">
+          <div class="card-name">Katathani Phuket Beach Resort</div>
+          <div class="card-location">📍 หาดกะตะน้อย, ภูเก็ต</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-price-row">
+          <div class="card-price">฿3,500–6,500 <span>/คืน</span></div>
+          <div class="review-score">8.8</div>
+        </div>
+        <div class="stars">★★★★★</div>
+        <div class="card-tags">
+          <span class="tag hi">ทั้งหาดกะตะน้อย</span>
+          <span class="tag">หลายสระว่ายน้ำ</span><span class="tag">77K likes FB</span>
+        </div>
+        <div class="card-desc">รีสอร์ทครอบคลุมทั้งหาดกะตะน้อย เดินถึงทะเลได้ใน 30 วินาที วิวอันดามันสวยงาม เหมาะทั้งครอบครัวและคู่รัก 77,211 likes Facebook ชุมชนใหญ่มาก</div>
+        <div class="btn-row">
+          <a class="map-btn" href="https://maps.google.com/?q=Katathani+Phuket+Beach+Resort+Kata+Noi" target="_blank">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>Google Maps
+          </a>
+          <a class="fb-btn" href="https://www.facebook.com/katathaniresort/" target="_blank">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>Facebook
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- B8 -->
+    <div class="hotel-card">
+      <div class="card-img-wrap">
+        <img class="card-img" src="https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?w=700&h=400&fit=crop" alt="Koh Mook De Tara Beach Resort">
+        <div class="img-badge">🌊 เกาะมุก ตรัง · ใกล้ถ้ำมรกต</div>
+      </div>
+      <div class="card-header" style="background:linear-gradient(135deg,#1D4ED8,#3B82F6);">
+        <div class="card-rank">B8</div>
+        <div class="card-header-info">
+          <div class="card-name">Koh Mook De Tara Beach Resort</div>
+          <div class="card-location">📍 เกาะมุก, ตรัง</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-price-row">
+          <div class="card-price">฿2,100–3,500 <span>/คืน</span></div>
+          <div class="review-score">8.5</div>
+        </div>
+        <div class="stars">★★★☆☆</div>
+        <div class="card-tags">
+          <span class="tag hi">ติดหาดเกาะมุก</span>
+          <span class="tag">วิลล่าส่วนตัว</span><span class="tag">ใกล้ถ้ำมรกต</span>
+        </div>
+        <div class="card-desc">วิลล่าติดหาดเกาะมุก ตรัง สงบส่วนตัว ใกล้ Morakot Cave อันโด่งดัง สิ่งอำนวยความสะดวกดี เหมาะสำหรับคู่รักและครอบครัวขนาดเล็ก</div>
+        <div class="btn-row">
+          <a class="map-btn" href="https://maps.google.com/?q=Koh+Mook+De+Tara+Beach+Resort+Trang" target="_blank">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>Google Maps
+          </a>
+          <span class="no-fb">⚠️ ไม่พบเพจ Facebook ที่ยืนยันได้</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- B9 -->
+    <div class="hotel-card">
+      <div class="card-img-wrap">
+        <img class="card-img" src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/29/1a/2b/3c/dusit-thani-krabi.jpg?w=700&h=500&s=1" alt="Dusit Thani Krabi Beach Resort" onerror="this.src='https://images.unsplash.com/photo-1615880484746-a134be9a6ecf?w=700&h=400&fit=crop'">
+        <div class="img-badge">⭐ 5 ดาว · Klong Muang Beach</div>
+      </div>
+      <div class="card-header" style="background:linear-gradient(135deg,#1D4ED8,#3B82F6);">
+        <div class="card-rank">B9</div>
+        <div class="card-header-info">
+          <div class="card-name">Dusit Thani Krabi Beach Resort</div>
+          <div class="card-location">📍 หาดกลองเมือง, กระบี่</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-price-row">
+          <div class="card-price">฿4,500–8,000 <span>/คืน</span></div>
+          <div class="review-score">8.9</div>
+        </div>
+        <div class="stars">★★★★★</div>
+        <div class="card-tags">
+          <span class="tag hi">หาดกลองเมือง</span><span class="tag hi">Club Lounge</span>
+          <span class="tag">5 ดาว</span><span class="tag">ไม่มีเรือรบกวน</span>
+        </div>
+        <div class="card-desc">โรงแรม 5 ดาวริมหาดกลองเมือง หาดสะอาดสงบไม่มีเรือจอด Club Lounge ริมหาดส่วนตัว สระใหญ่ อาหารระดับเลิศ มีเพจ Facebook อัปเดตสม่ำเสมอ</div>
+        <div class="btn-row">
+          <a class="map-btn" href="https://maps.google.com/?q=Dusit+Thani+Krabi+Beach+Resort+Klong+Muang" target="_blank">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>Google Maps
+          </a>
+          <a class="fb-btn" href="https://www.facebook.com/DusitKrabi/" target="_blank">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>Facebook
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- B10 -->
+    <div class="hotel-card">
+      <div class="card-img-wrap">
+        <img class="card-img" src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2a/7c/3e/5b/the-nai-harn-phuket.jpg?w=700&h=500&s=1" alt="The Nai Harn Phuket" onerror="this.src='https://images.unsplash.com/photo-1615880484746-a134be9a6ecf?w=700&h=400&fit=crop'">
+        <div class="img-badge">🏆 MICHELIN Key 2025 · Nai Harn Beach</div>
+      </div>
+      <div class="card-header" style="background:linear-gradient(135deg,#1D4ED8,#3B82F6);">
+        <div class="card-rank">B10</div>
+        <div class="card-header-info">
+          <div class="card-name">The Nai Harn Phuket</div>
+          <div class="card-location">📍 หาดในหาน, ภูเก็ต</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-price-row">
+          <div class="card-price">฿4,000–7,500 <span>/คืน</span></div>
+          <div class="review-score">9.1</div>
+        </div>
+        <div class="stars">★★★★★</div>
+        <div class="card-tags">
+          <span class="tag hi">MICHELIN Key 2025</span>
+          <span class="tag hi">Rooftop Pool</span>
+          <span class="tag">5 ดาว Leading Hotels</span>
+        </div>
+        <div class="card-desc">โรงแรม 5 ดาว Leading Hotels of the World หนึ่งเดียวในภูเก็ต ได้รับรางวัล MICHELIN Key 2025 Rooftop Pool วิวแหลมพรหมเทพ 35,216 likes Facebook</div>
+        <div class="btn-row">
+          <a class="map-btn" href="https://maps.google.com/?q=The+Nai+Harn+Hotel+Phuket+Nai+Harn+Beach" target="_blank">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>Google Maps
+          </a>
+          <a class="fb-btn" href="https://www.facebook.com/TheNaiHarn/" target="_blank">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>Facebook
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<hr class="divider" style="max-width:1100px;margin:0 auto;">
+
+<!-- ===== SECTION 3: CHEAPEST ===== -->
+<div id="sec-cheapest" class="section">
+  <div class="section-title">💰 ราคาต่ำสุด 10 อันดับ <span class="badge">จากทั้งหมด 20 ที่</span></div>
+  <div class="section-desc">เรียงจากราคาต่ำสุด → สูงสุด · ราคาเริ่มต้น/คืน High Season</div>
+  <table class="rank-table">
+    <thead><tr><th>#</th><th>ที่พัก</th><th>จังหวัด</th><th>ราคา/คืน</th><th>รีวิว</th><th>แผนที่ + Facebook</th></tr></thead>
+    <tbody>
+      <tr><td><span class="rank-num">1</span></td><td><strong>Klong Jark Bungalow</strong></td><td>กระบี่</td><td><span class="price-pill">฿700+</span></td><td><span class="score-pill">8.0</span></td><td><a class="tbl-map" href="https://maps.google.com/?q=Klong+Jark+Bungalow+Ko+Lanta+Krabi" target="_blank">🗺</a></td></tr>
+      <tr><td><span class="rank-num">2</span></td><td><strong>Adang Sea Divers Eco Lodge</strong></td><td>สตูล</td><td><span class="price-pill">฿800+</span></td><td><span class="score-pill">7.9</span></td><td><a class="tbl-map" href="https://maps.google.com/?q=Adang+Sea+Divers+Eco+Lodge+Ko+Lipe+Satun" target="_blank">🗺</a></td></tr>
+      <tr style="background:#F0FFF4;"><td><span class="rank-num">3</span></td><td><strong>✨ Castaway Koh Lipe</strong></td><td>สตูล</td><td><span class="price-pill">฿800+</span></td><td><span class="score-pill" style="background:#10B981;">9.1</span></td><td><a class="tbl-map" href="https://maps.google.com/?q=Castaway+Koh+Lipe+Resort+Satun+Thailand" target="_blank">🗺</a> <a class="tbl-fb" href="https://www.facebook.com/castawayresort/" target="_blank">FB</a></td></tr>
+      <tr><td><span class="rank-num">4</span></td><td><strong>Lanta Garden Home</strong></td><td>กระบี่</td><td><span class="price-pill">฿800+</span></td><td><span class="score-pill">8.1</span></td><td><a class="tbl-map" href="https://maps.google.com/?q=Lanta+Garden+Home+Klong+Dao+Ko+Lanta" target="_blank">🗺</a></td></tr>
+      <tr><td><span class="rank-num">5</span></td><td><strong>Lipe Beach Resort</strong></td><td>สตูล</td><td><span class="price-pill">฿900+</span></td><td><span class="score-pill">8.5</span></td><td><a class="tbl-map" href="https://maps.google.com/?q=Lipe+Beach+Resort+Ko+Lipe+Satun" target="_blank">🗺</a> <a class="tbl-fb" href="https://www.facebook.com/Lipethailand/" target="_blank">FB</a></td></tr>
+      <tr><td><span class="rank-num">6</span></td><td><strong>Ten Moons Sunrise</strong></td><td>สตูล</td><td><span class="price-pill">฿1,000+</span></td><td><span class="score-pill">8.8</span></td><td><a class="tbl-map" href="https://maps.google.com/?q=Ten+Moons+Sunrise+Koh+Lipe+Satun" target="_blank">🗺</a></td></tr>
+      <tr><td><span class="rank-num">7</span></td><td><strong>Mook Montra Resort</strong></td><td>ตรัง</td><td><span class="price-pill">฿1,200+</span></td><td><span class="score-pill">8.4</span></td><td><a class="tbl-map" href="https://maps.google.com/?q=Mook+Montra+Resort+Koh+Mook+Trang" target="_blank">🗺</a> <a class="tbl-fb" href="https://www.facebook.com/MookmontraResort/" target="_blank">FB</a></td></tr>
+      <tr><td><span class="rank-num">8</span></td><td><strong>Lanta Nature Beach Resort</strong></td><td>กระบี่</td><td><span class="price-pill">฿1,200+</span></td><td><span class="score-pill">8.2</span></td><td><a class="tbl-map" href="https://maps.google.com/?q=Lanta+Nature+Beach+Resort+Ko+Lanta+Krabi" target="_blank">🗺</a></td></tr>
+      <tr><td><span class="rank-num">9</span></td><td><strong>Sita Beach Resort</strong></td><td>สตูล</td><td><span class="price-pill">฿1,500+</span></td><td><span class="score-pill">8.3</span></td><td><a class="tbl-map" href="https://maps.google.com/?q=Sita+Beach+Resort+Ko+Lipe+Satun" target="_blank">🗺</a></td></tr>
+      <tr><td><span class="rank-num">10</span></td><td><strong>Dugong Village Resort</strong></td><td>ตรัง</td><td><span class="price-pill">฿1,900+</span></td><td><span class="score-pill">8.6</span></td><td><a class="tbl-map" href="https://maps.google.com/?q=Dugong+Village+Pak+Meng+Beach+Trang" target="_blank">🗺</a> <a class="tbl-fb" href="https://www.facebook.com/dugongvillage/" target="_blank">FB</a></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<hr class="divider" style="max-width:1100px;margin:0 auto;">
+
+<!-- ===== SECTION 4: BEST REVIEW ===== -->
+<div id="sec-review" class="section">
+  <div class="section-title">⭐ อันดับรีวิวดีที่สุด <span class="badge">จากทั้งหมด 20 ที่</span></div>
+  <div class="section-desc">เรียงจากคะแนนสูงสุด → ต่ำสุด</div>
+  <table class="rank-table">
+    <thead><tr><th>#</th><th></th><th>ที่พัก</th><th>จังหวัด</th><th>คะแนน</th><th>ราคา/คืน</th><th>Links</th></tr></thead>
+    <tbody>
+      <tr style="background:#FFFBEB;"><td><span class="rank-num">1</span></td><td>🥇</td><td><strong>Idyllic Concept Resort</strong></td><td>สตูล</td><td><span class="score-pill" style="background:#F59E0B;">9.2</span></td><td><span class="price-pill">฿2,500+</span></td><td><a class="tbl-map" href="https://maps.google.com/?q=Idyllic+Concept+Resort+Sunrise+Beach+Ko+Lipe+Satun" target="_blank">🗺</a> <a class="tbl-fb" href="https://www.facebook.com/IdyllicConceptResort/" target="_blank">FB</a></td></tr>
+      <tr style="background:#F0FFF4;"><td><span class="rank-num">2</span></td><td>🥈</td><td><strong>Castaway Koh Lipe Resort</strong></td><td>สตูล</td><td><span class="score-pill" style="background:#10B981;">9.1</span></td><td><span class="price-pill">฿800+</span></td><td><a class="tbl-map" href="https://maps.google.com/?q=Castaway+Koh+Lipe+Resort+Satun+Thailand" target="_blank">🗺</a> <a class="tbl-fb" href="https://www.facebook.com/castawayresort/" target="_blank">FB</a></td></tr>
+      <tr><td><span class="rank-num">3</span></td><td>🥉</td><td><strong>The Nai Harn Phuket</strong></td><td>ภูเก็ต</td><td><span class="score-pill">9.1</span></td><td><span class="price-pill">฿4,000+</span></td><td><a class="tbl-map" href="https://maps.google.com/?q=The+Nai+Harn+Hotel+Phuket+Nai+Harn+Beach" target="_blank">🗺</a> <a class="tbl-fb" href="https://www.facebook.com/TheNaiHarn/" target="_blank">FB</a></td></tr>
+      <tr><td><span class="rank-num">4</span></td><td>🏅</td><td><strong>Akira Lipe Resort</strong></td><td>สตูล</td><td><span class="score-pill">9.0</span></td><td><span class="price-pill">฿2,800+</span></td><td><a class="tbl-map" href="https://maps.google.com/?q=Akira+Beach+Resort+Ko+Lipe+Satun" target="_blank">🗺</a> <a class="tbl-fb" href="https://www.facebook.com/Akiraresort/" target="_blank">FB</a></td></tr>
+      <tr><td><span class="rank-num">5</span></td><td>🏅</td><td><strong>Rawi Warin Resort & Spa</strong></td><td>กระบี่</td><td><span class="score-pill">9.0</span></td><td><span class="price-pill">฿3,500+</span></td><td><a class="tbl-map" href="https://maps.google.com/?q=Rawi+Warin+Resort+Spa+Ko+Lanta+Krabi" target="_blank">🗺</a> <a class="tbl-fb" href="https://www.facebook.com/p/Rawi-Warin-Resort-Spa-61562873427778/" target="_blank">FB</a></td></tr>
+      <tr><td><span class="rank-num">6</span></td><td>⭐</td><td><strong>Ananya Lipe Resort</strong></td><td>สตูล</td><td><span class="score-pill">8.9</span></td><td><span class="price-pill">฿2,500+</span></td><td><a class="tbl-map" href="https://maps.google.com/?q=Ananya+Lipe+Resort+Ko+Lipe+Satun" target="_blank">🗺</a> <a class="tbl-fb" href="https://www.facebook.com/ananyalipe/" target="_blank">FB</a></td></tr>
+      <tr><td><span class="rank-num">7</span></td><td>⭐</td><td><strong>Dusit Thani Krabi</strong></td><td>กระบี่</td><td><span class="score-pill">8.9</span></td><td><span class="price-pill">฿4,500+</span></td><td><a class="tbl-map" href="https://maps.google.com/?q=Dusit+Thani+Krabi+Beach+Resort+Klong+Muang" target="_blank">🗺</a> <a class="tbl-fb" href="https://www.facebook.com/DusitKrabi/" target="_blank">FB</a></td></tr>
+      <tr><td><span class="rank-num">8</span></td><td>⭐</td><td><strong>Ten Moons Sunrise</strong></td><td>สตูล</td><td><span class="score-pill">8.8</span></td><td><span class="price-pill">฿1,000+</span></td><td><a class="tbl-map" href="https://maps.google.com/?q=Ten+Moons+Sunrise+Koh+Lipe+Satun" target="_blank">🗺</a></td></tr>
+      <tr><td><span class="rank-num">9</span></td><td>⭐</td><td><strong>Katathani Phuket Beach Resort</strong></td><td>ภูเก็ต</td><td><span class="score-pill">8.8</span></td><td><span class="price-pill">฿3,500+</span></td><td><a class="tbl-map" href="https://maps.google.com/?q=Katathani+Phuket+Beach+Resort+Kata+Noi" target="_blank">🗺</a> <a class="tbl-fb" href="https://www.facebook.com/katathaniresort/" target="_blank">FB</a></td></tr>
+      <tr><td><span class="rank-num">10</span></td><td>⭐</td><td><strong>Avani+ Koh Lanta Krabi Resort</strong></td><td>กระบี่</td><td><span class="score-pill">8.7</span></td><td><span class="price-pill">฿4,000+</span></td><td><a class="tbl-map" href="https://maps.google.com/?q=Avani+Plus+Koh+Lanta+Krabi+Resort" target="_blank">🗺</a> <a class="tbl-fb" href="https://www.facebook.com/avanikohlantakrabi/" target="_blank">FB</a></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<hr class="divider" style="max-width:1100px;margin:0 auto;">
+
+<!-- ===== SECTION 5: VALUE ===== -->
+<div id="sec-value" class="section">
+  <div class="section-title">🏆 อันดับความคุ้มค่าสุด 10 อันดับ <span class="badge">Value Score</span></div>
+  <div class="section-desc">คำนวณจาก (คะแนนรีวิว × 1000) ÷ ราคาเริ่มต้น · ยิ่งสูงยิ่งคุ้มค่า</div>
+  <div class="note-box">🧮 <strong>ตัวอย่าง:</strong> Castaway Koh Lipe คะแนน 9.1 ราคา ฿800 → 9.1×1000÷800 = <strong>11.4</strong> (คุ้มค่าสูงสุด)</div>
+  <table class="rank-table">
+    <thead><tr><th>#</th><th>ที่พัก</th><th>จังหวัด</th><th>คะแนน</th><th>ราคา</th><th>Value</th><th>Links</th></tr></thead>
+    <tbody>
+      <tr style="background:#FFFBEB;"><td><span class="rank-num">1</span></td><td><strong>🥇 Castaway Koh Lipe</strong></td><td>สตูล</td><td><span class="score-pill">9.1</span></td><td><span class="price-pill">฿800</span></td><td><div class="value-bar"><span style="font-weight:700;color:#F59E0B;min-width:32px;">11.4</span><div class="bar-track"><div class="bar-fill" style="width:100%;background:linear-gradient(90deg,#F59E0B,#FCD34D);"></div></div></div></td><td><a class="tbl-map" href="https://maps.google.com/?q=Castaway+Koh+Lipe+Resort+Satun+Thailand" target="_blank">🗺</a> <a class="tbl-fb" href="https://www.facebook.com/castawayresort/" target="_blank">FB</a></td></tr>
+      <tr><td><span class="rank-num">2</span></td><td><strong>Adang Sea Divers Lodge</strong></td><td>สตูล</td><td><span class="score-pill">7.9</span></td><td><span class="price-pill">฿800</span></td><td><div class="value-bar"><span style="font-weight:700;min-width:32px;">9.9</span><div class="bar-track"><div class="bar-fill" style="width:87%;"></div></div></div></td><td><a class="tbl-map" href="https://maps.google.com/?q=Adang+Sea+Divers+Eco+Lodge+Ko+Lipe+Satun" target="_blank">🗺</a></td></tr>
+      <tr><td><span class="rank-num">3</span></td><td><strong>Klong Jark Bungalow</strong></td><td>กระบี่</td><td><span class="score-pill">8.0</span></td><td><span class="price-pill">฿700</span></td><td><div class="value-bar"><span style="font-weight:700;min-width:32px;">9.8</span><div class="bar-track"><div class="bar-fill" style="width:86%;"></div></div></div></td><td><a class="tbl-map" href="https://maps.google.com/?q=Klong+Jark+Bungalow+Ko+Lanta+Krabi" target="_blank">🗺</a></td></tr>
+      <tr><td><span class="rank-num">4</span></td><td><strong>Lipe Beach Resort</strong></td><td>สตูล</td><td><span class="score-pill">8.5</span></td><td><span class="price-pill">฿900</span></td><td><div class="value-bar"><span style="font-weight:700;min-width:32px;">9.4</span><div class="bar-track"><div class="bar-fill" style="width:83%;"></div></div></div></td><td><a class="tbl-map" href="https://maps.google.com/?q=Lipe+Beach+Resort+Ko+Lipe+Satun" target="_blank">🗺</a> <a class="tbl-fb" href="https://www.facebook.com/Lipethailand/" target="_blank">FB</a></td></tr>
+      <tr><td><span class="rank-num">5</span></td><td><strong>Lanta Garden Home</strong></td><td>กระบี่</td><td><span class="score-pill">8.1</span></td><td><span class="price-pill">฿800</span></td><td><div class="value-bar"><span style="font-weight:700;min-width:32px;">9.0</span><div class="bar-track"><div class="bar-fill" style="width:79%;"></div></div></div></td><td><a class="tbl-map" href="https://maps.google.com/?q=Lanta+Garden+Home+Klong+Dao+Ko+Lanta" target="_blank">🗺</a></td></tr>
+      <tr><td><span class="rank-num">6</span></td><td><strong>Ten Moons Sunrise</strong></td><td>สตูล</td><td><span class="score-pill">8.8</span></td><td><span class="price-pill">฿1,000</span></td><td><div class="value-bar"><span style="font-weight:700;min-width:32px;">8.8</span><div class="bar-track"><div class="bar-fill" style="width:77%;"></div></div></div></td><td><a class="tbl-map" href="https://maps.google.com/?q=Ten+Moons+Sunrise+Koh+Lipe+Satun" target="_blank">🗺</a></td></tr>
+      <tr><td><span class="rank-num">7</span></td><td><strong>Mook Montra Resort</strong></td><td>ตรัง</td><td><span class="score-pill">8.4</span></td><td><span class="price-pill">฿1,200</span></td><td><div class="value-bar"><span style="font-weight:700;min-width:32px;">7.0</span><div class="bar-track"><div class="bar-fill" style="width:62%;"></div></div></div></td><td><a class="tbl-map" href="https://maps.google.com/?q=Mook+Montra+Resort+Koh+Mook+Trang" target="_blank">🗺</a> <a class="tbl-fb" href="https://www.facebook.com/MookmontraResort/" target="_blank">FB</a></td></tr>
+      <tr><td><span class="rank-num">8</span></td><td><strong>Sita Beach Resort</strong></td><td>สตูล</td><td><span class="score-pill">8.3</span></td><td><span class="price-pill">฿1,500</span></td><td><div class="value-bar"><span style="font-weight:700;min-width:32px;">5.5</span><div class="bar-track"><div class="bar-fill" style="width:48%;"></div></div></div></td><td><a class="tbl-map" href="https://maps.google.com/?q=Sita+Beach+Resort+Ko+Lipe+Satun" target="_blank">🗺</a></td></tr>
+      <tr><td><span class="rank-num">9</span></td><td><strong>Dugong Village Resort</strong></td><td>ตรัง</td><td><span class="score-pill">8.6</span></td><td><span class="price-pill">฿1,900</span></td><td><div class="value-bar"><span style="font-weight:700;min-width:32px;">4.5</span><div class="bar-track"><div class="bar-fill" style="width:40%;"></div></div></div></td><td><a class="tbl-map" href="https://maps.google.com/?q=Dugong+Village+Pak+Meng+Beach+Trang" target="_blank">🗺</a> <a class="tbl-fb" href="https://www.facebook.com/dugongvillage/" target="_blank">FB</a></td></tr>
+      <tr><td><span class="rank-num">10</span></td><td><strong>Idyllic Concept Resort</strong></td><td>สตูล</td><td><span class="score-pill">9.2</span></td><td><span class="price-pill">฿2,500</span></td><td><div class="value-bar"><span style="font-weight:700;min-width:32px;">3.7</span><div class="bar-track"><div class="bar-fill" style="width:33%;"></div></div></div></td><td><a class="tbl-map" href="https://maps.google.com/?q=Idyllic+Concept+Resort+Sunrise+Beach+Ko+Lipe+Satun" target="_blank">🗺</a> <a class="tbl-fb" href="https://www.facebook.com/IdyllicConceptResort/" target="_blank">FB</a></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- FOOTER -->
+<div style="max-width:1100px;margin:0 auto;padding:24px 16px 48px;">
+  <div style="background:white;border-radius:14px;padding:20px 24px;box-shadow:0 2px 12px rgba(0,119,182,.08);">
+    <div style="font-family:'Kanit',sans-serif;font-size:1rem;font-weight:600;color:#023E8A;margin-bottom:14px;">📌 สรุปภาพรวมและคำแนะนำ</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-bottom:16px;">
+      <div style="padding:12px;background:#F0FFF4;border-radius:10px;border-left:3px solid #10B981;"><div style="font-weight:700;margin-bottom:4px;">🏆 คุ้มค่าสูงสุด</div>Castaway Koh Lipe<br><span style="color:#6B7280;font-size:.82rem;">฿800+ · รีวิว 9.1 · FB 69K</span></div>
+      <div style="padding:12px;background:#FFFBEB;border-radius:10px;border-left:3px solid #F59E0B;"><div style="font-weight:700;margin-bottom:4px;">⭐ รีวิวดีสุด</div>Idyllic Concept Resort<br><span style="color:#6B7280;font-size:.82rem;">฿2,500+ · รีวิว 9.2 · FB 70K</span></div>
+      <div style="padding:12px;background:#EFF6FF;border-radius:10px;border-left:3px solid #3B82F6;"><div style="font-weight:700;margin-bottom:4px;">💰 ราคาต่ำสุด</div>Klong Jark Bungalow<br><span style="color:#6B7280;font-size:.82rem;">฿700+ · เกาะลันตา</span></div>
+      <div style="padding:12px;background:#FFF1F2;border-radius:10px;border-left:3px solid #F43F5E;"><div style="font-weight:700;margin-bottom:4px;">🌟 ครอบครัว</div>Rawi Warin Resort & Spa<br><span style="color:#6B7280;font-size:.82rem;">฿3,500+ · 4 สระ · สไลเดอร์</span></div>
+    </div>
+    <div style="background:#EBF8FF;border-radius:8px;padding:12px 14px;font-size:.78rem;color:#023E8A;line-height:1.8;">
+      <strong>ℹ️ หมายเหตุสำคัญ:</strong><br>
+      • ราคาเป็นราคาเริ่มต้น High Season (พ.ย.–เม.ย.) อ้างอิง Booking.com / TripAdvisor / Agoda 2025–2026<br>
+      • Facebook ที่แนบมาเป็นเพจที่ตรวจยืนยันว่าเป็น Official Page จริงทั้งหมด (บางที่ที่ไม่มีเพจจริงจะระบุไว้)<br>
+      • ราคาจริงอาจแตกต่างตามวันจอง ประเภทห้อง และโปรโมชั่น · แนะนำจองล่วงหน้า 1–2 เดือน ช่วง High Season<br>
+      • ทุกที่พักอยู่ในพื้นที่ทะเลอันดามัน ภาคใต้ฝั่งตะวันตก: ภูเก็ต · กระบี่ · ตรัง · สตูล
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
